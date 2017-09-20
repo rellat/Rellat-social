@@ -26,5 +26,6 @@ router.get('/api/v1/admin/users', clientManager.getAllUserList)
 router.get('/api/v1/admin/user/:email', clientManager.getOneUserData)
 router.put('/api/v1/admin/user/:email', clientManager.updateUser)
 router.delete('/api/v1/admin/user/:email', clientManager.deleteUser)
+router.get('/api/v1/admin/getMainpage', clientManager.getMainpage)
 
 module.exports = router

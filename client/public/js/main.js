@@ -31919,7 +31919,12 @@ loginformElement.addEventListener('submit', function (e) {
   e.preventDefault()
   submitLogin(document.loginForm.identifier.value, document.loginForm.password.value, function (msg) {
     console.log('fuck yeah ' + JSON.stringify(msg))
-    if (msg.status === 'true') storeTocken(msg.token)
+    if (msg.status === 'true'){
+      if(!storeToken(msg.token)) return
+
+      getMainpage(msg.userEmail,msg.token)
+
+    }
     if (msg.status === 'false') console.log('false popup')
   })
   return false // stop propagating
@@ -31969,10 +31974,10 @@ function submitRegister (name, email, password, callback) {
   })
 }
 
-function storeTocken (token) {
+function storeToken (token) {
   if (typeof (Storage) === 'undefined') {
     console.log('This browser is not support web storage')
-    return
+    return false
   }
 
   // Store
@@ -31981,6 +31986,36 @@ function storeTocken (token) {
   // Retrieve
   console.log(localStorage.getItem('token'))
 
+  return true
+}
+
+function getMainpage (email,token) {
+  // 여기서는 서버에 요청해서 main page template를 받아온다
+  request({
+    method: 'GET',
+    url: 'http://localhost:3000/api/v1/admin/getMainpage',
+    headers:
+      {
+        'cache-control': 'no-cache',
+        'content-type': 'application/json',
+        'x-key': email,
+        'x-access-token': token
+      },
+    json: true
+  }, function (error, response, body) {
+    if (error) throw new Error(error)
+    document.body.innerHTML = body
+    document.body.style.background = '#FFFFFF'
+
+    var btns = document.getElementsByClassName('followBtn')
+
+    for(var i =0; i< btns.length; i++){
+      var id = btns[i].id
+      btns[i].addEventListener("click",function () {
+        alert(id)
+      })
+    }
+  })
 }
 
 var options = {
@@ -31991,7 +32026,7 @@ var options = {
       'cache-control': 'no-cache',
       'content-type': 'application/json',
       'x-key': 'dldnjswo19@gmail.com',
-      'x-access-token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MDU3MjcyNTMxMTN9.5yN4JA2IdaaMV0YtD1Cazu76CfoLiyye8KeRYJLri2I'
+      'x-access-token': localStorage.getItem('token')
     },
   json: true
 }

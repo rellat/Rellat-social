@@ -1,4 +1,3 @@
-
 var express = require('express')
 var path = require('path')
 var favicon = require('serve-favicon')
@@ -6,12 +5,19 @@ var logger = require('morgan')
 var bodyParser = require('body-parser')
 var cors = require('cors') // for cross browser ajax allow setting
 var app = express()
+var mustacheExpress = require('mustache-express')
+
+// Register '.mustache' extension with The Mustache Express
+app.engine('mustache', mustacheExpress())
+
+app.set('view engine', 'mustache')
+app.set('views', __dirname + '/views')
 
 // express setting
 app.use(favicon(path.join(__dirname, '../client/public', 'favicon.ico')))
 app.use(logger('dev'))
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, '../client/public')))
 app.use(cors()) // 브라우져에서 ajax 호출 허용. blank일때 어떤 도메인에서 ajax 호출해도 다 허용. it means '*'
 
