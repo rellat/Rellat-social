@@ -40,6 +40,8 @@ loginformElement.addEventListener('submit', function (e) {
   e.preventDefault()
   submitLogin(document.loginForm.identifier.value, document.loginForm.password.value, function (msg) {
     console.log('fuck yeah ' + JSON.stringify(msg))
+    if (msg.status === 'true') storeTocken(msg.token)
+    if (msg.status === 'false') console.log('false popup')
   })
   return false // stop propagating
 })
@@ -65,6 +67,8 @@ registerformElement.addEventListener('submit', function (e) {
   e.preventDefault()
   submitRegister(document.registerForm.username.value, document.registerForm.identifier.value, document.registerForm.password.value, function (msg) {
     console.log('fuck yeah ' + JSON.stringify(msg))
+    if (msg.status === 'true') fadeOutIn(registerformElement, loginformElement, 1000)
+    if (msg.status === 'false') console.log('false popup')
   })
   return false // stop propagating
 })
@@ -84,6 +88,20 @@ function submitRegister (name, email, password, callback) {
     if (error) throw new Error(error)
     callback(body)
   })
+}
+
+function storeTocken (token) {
+  if (typeof (Storage) === 'undefined') {
+    console.log('This browser is not support web storage')
+    return
+  }
+
+  // Store
+  localStorage.setItem('token', token)
+
+  // Retrieve
+  console.log(localStorage.getItem('token'))
+
 }
 
 var options = {
