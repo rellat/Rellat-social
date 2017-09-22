@@ -1,0 +1,17 @@
+<table>
+  <tr>
+    <th> Friend's Email</th>
+    <th> Follow Buttons</th>
+  </tr>
+
+  {{#emails}}
+    <tr>
+      <td> {{email}}</td>
+      <td>
+        <button class = "followBtn" id = {{email}} >follow</button>
+      </td>
+
+    </tr>
+  {{/emails}}
+
+</table>
