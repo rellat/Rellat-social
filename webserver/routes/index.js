@@ -1,37 +1,25 @@
 var express = require('express')
 var router = express.Router()
 
-/*
- * Routes that can be accessed by any one
- */
+var loginRoute = require('./login_route')
+router.post('/user/checkExist', loginRoute.checkExist)
+router.post('/user/registerUser', loginRoute.registerUser)
+router.post('/user/login', loginRoute.login)
 
-var userController = require('./user-controller')
-router.post('/user/checkExist', userController.checkExist)
-router.post('/user/registerUser', userController.registerUser)
-router.post('/user/login', userController.login)
+var homeRoute = require('./home_route')
+router.get('/main', homeRoute.getMainPage)
+router.get('/api/v1/feed/getFeeds', homeRoute.getFeeds)
+router.post('/api/v1/feed/postFeed', homeRoute.postFeed)
 
-/*
- * Routes that can be accessed only by autheticated users
- */
-var feedController = require('./feed-controller')
-router.get('/api/v1/feed/getFeeds', feedController.getFeeds)
-router.post('/api/v1/feed/postFeed', feedController.postFeed)
+var apiRoute = require('./api_route')
+router.get('/api/v1/admin/users', apiRoute.getAllUserList)
+router.get('/api/v1/admin/user/:email', apiRoute.getOneUserData)
+router.put('/api/v1/admin/user/:email', apiRoute.updateUser)
+router.delete('/api/v1/admin/user/:email', apiRoute.deleteUser)
 
-/*
- * Routes that can be accessed only by authenticated & authorized users
- */
-router.get('/api/v1/admin/users', userController.getAllUserList)
-router.get('/api/v1/admin/user/:email', userController.getOneUserData)
-router.put('/api/v1/admin/user/:email', userController.updateUser)
-router.delete('/api/v1/admin/user/:email', userController.deleteUser)
-
-var pageController = require('./page-controller')
-router.get('/UsersPage', pageController.getUsersPage)
-router.get('/main', pageController.getMainPage)
-
-router.use('/',function (req, res) {
-
-  res.render('index',{})
+// 지금은 index를 보여주지만 나중에는 home 페이지로 들어가도록 하자
+router.get('/', function (req, res) {
+  res.render('index', {})
 })
 
 module.exports = router

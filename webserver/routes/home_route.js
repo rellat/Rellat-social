@@ -1,16 +1,19 @@
 var Feed = require('../models/feeds')
-/**
- *
- *
- * feed data structure
- * {
- *   user: String,
- *   userEmail: String,
- *   userImage: String,
- *   content: String,
- *   date: {type: Date, default: Date.now}
- * }
- */
+
+module.exports.getMainPage = function (req, res) {
+
+  Feed.find({})
+    .sort({date: -1}).exec(function (err, allFeeds) {
+    if (err) {
+      res.error(err)
+    } else {
+      var data = {
+        "feeds" : allFeeds
+      }
+      res.render('main',data)
+    }
+  })
+}
 
 // 새로운 feed data를 받았을 때 feed를 생성하고 save 한 다음 모든 feed를 클라이언트에게 전송한다
 module.exports.postFeed = function (req, res) {
@@ -30,6 +33,7 @@ module.exports.postFeed = function (req, res) {
   })
 }
 
+
 /**
  *
  * @param req : following 목록이 들어오는 것 같다
@@ -46,7 +50,7 @@ module.exports.getFeeds = function (req, res) {
         if (err) {
           res.error(err)
         } else {
-          res.render('main',allFeeds)
+          res.render('feed',allFeeds)
         }
       })
   } else {
@@ -63,7 +67,7 @@ module.exports.getFeeds = function (req, res) {
           res.error(err)
         } else {
           // 조건에 맞는 feed들만 찾아서 보내준다
-          res.render('main',allFeeds)
+          res.render('feed',allFeeds)
         }
       })
   }
