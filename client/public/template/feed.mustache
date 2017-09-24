@@ -1,0 +1,41 @@
+{{#feeds}}
+    <article class="card-60 social">
+        <div class="flex-content">
+            <header>
+                <p class="user">
+                    <a class="button follow" href="#" title="Follow" id= {{userEmail}}>
+                        Follow
+                    </a>
+                    <img class="avatar-32" alt="Avatar" src={{userImage}}>
+                    <strong>
+                        <a title="Full Name" href="#">
+                            {{user}}
+                        </a>
+                    </strong>
+                    <!--여기에 date 있었음 -->
+
+                </p>
+            </header>
+            <h2>
+                {{contentTitle}}
+            </h2>
+            <p>
+                {{contentBody}}
+            </p>
+            <footer>
+                <p>
+                    <a class="bt-love" title="Love" href="#">
+                        Love
+                    </a>
+                    <a class="bt-comment" title="Comment" href="#">
+                        Comment
+                    </a>
+                </p>
+            </footer>
+        </div>
+        <!-- end .flex-content-->
+    </article>
+
+{{/feeds}}
+
+<!--<span>date</span>-->

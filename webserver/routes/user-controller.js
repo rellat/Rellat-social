@@ -2,25 +2,25 @@ var jwt = require('jwt-simple')
 var User = require('../models/user')
 
 module.exports.checkExist = function (req, res) {
-  var username = req.body.email || ''
+  var email = req.body.email || ''
   var password = req.body.password || ''
 
-  if (username == '' || password == '') {
+  if (email === '' || password === '') {
     res.status(401)
     res.json({
       'status': 401,
-      'message': 'username : ' + username + ' password : ' + password
+      'message': 'email : ' + email + ' password : ' + password
     })
     return
   }
 
-  User.findOne({email: username}, function (error, user) {
+  User.findOne({email: email}, function (error, user) {
 
     if (error) {
       res.status(401)
       res.json({
         'status': 401,
-        'message': 'username : ' + username + ' password : ' + password
+        'message': 'username : ' + email + ' password : ' + password
       })
       return
     }
@@ -30,7 +30,7 @@ module.exports.checkExist = function (req, res) {
         'status': 'false',
         'message': 'user is not exist'
       })
-    } else if (user.email === username) {
+    } else if (user.email === email) {
       res.json({
         'status': 'true',
         'message': 'user already exist'
@@ -39,32 +39,42 @@ module.exports.checkExist = function (req, res) {
   })
 }
 
-module.exports.registerUser =  function (req, res) {
-  var username = req.body.email || ''
+module.exports.registerUser = function (req, res) {
+  var email = req.body.email || ''
   var password = req.body.password || ''
+  var username = req.body.name || ''
 
-  if (username === '' || password === '') {
+  if (email === '' || password === '') {
     res.status(401)
     res.json({
       'status': 401,
-      'message': 'username : ' + username + ' password : ' + password
+      'message': 'email : ' + email + ' password : ' + password
     })
     return
   }
 
-  User.findOne({email: username}, function (error, user) {
+  User.findOne({email: email}, function (error, user) {
 
     if (error) {
       res.status(401)
       res.json({
         'status': 401,
-        'message': 'username : ' + username + ' password : ' + password
+        'message': 'email : ' + email + ' password : ' + password
       })
       return
     }
-
+    // 나중에 following 배열에 넣을 때는 {id : String} 형태로 push 해야한다
     if (!user) {
-      var newUser = new User({email: username, password: password, userRole: 'admin'})
+      var newUser = new User({
+        email: email,
+        username: username,
+        password: password,
+        image: '',
+        bio: '',
+        userRole: 'admin',
+        following: [],
+        followers: []
+      })
 
       newUser.save(function (error, data) {
         if (error) {
@@ -93,25 +103,25 @@ module.exports.registerUser =  function (req, res) {
 
 module.exports.login = function (req, res) {
 
-  var username = req.body.email || ''
+  var email = req.body.email || ''
   var password = req.body.password || ''
-  console.log(username)
-  if (username === '' || password === '') {
+
+  if (email === '' || password === '') {
     res.status(401)
     res.json({
       'status': 401,
-      'message': 'username : ' + username + ' password : ' + password
+      'message': 'email : ' + email + ' password : ' + password
     })
     return
   }
 
-  User.findOne({email: username}, function (error, user) {
+  User.findOne({email: email}, function (error, user) {
 
     if (error) {
       res.status(401)
       res.json({
         'status': 401,
-        'message': 'username : ' + username + ' password : ' + password
+        'message': 'email : ' + email + ' password : ' + password
       })
       return
     }
@@ -122,13 +132,14 @@ module.exports.login = function (req, res) {
         'message': 'user dosen\'t exist'
       })
 
-    } else if (user.email == username && user.password == password) {
+    } else if (user.email === email && user.password === password) {
       var data = genToken(user)
       res.json({
         'status': 'true',
         'message': 'validate user',
         'token': data.token,
-        'userEmail': data.user.email
+        'userEmail': user.email,
+        'username': user.username
       })
     } else {
       res.json({
@@ -162,18 +173,18 @@ module.exports.getAllUserList = function (req, res) {
 }
 
 module.exports.getOneUserData = function (req, res) {
-  var username = req.params.email || ''
+  var email = req.params.email || ''
 
-  if (username === '') {
+  if (email === '') {
     res.status(401)
     res.json({
       'status': 401,
-      'message': 'username : ' + username
+      'message': 'email : ' + email
     })
     return
   }
 
-  User.findOne({email: username}, function (error, user) {
+  User.findOne({email: email}, function (error, user) {
     if (error) {
       res.status(401)
       res.json({
@@ -197,18 +208,18 @@ module.exports.getOneUserData = function (req, res) {
 
 module.exports.updateUser = function (req, res) {
   var newData = req.body
-  var username = req.params.email
+  var email = req.params.email
 
-  if (username == '') {
+  if (email === '') {
     res.status(401)
     res.json({
       'status': 401,
-      'message': 'username : ' + username
+      'message': 'email : ' + email
     })
     return
   }
 
-  User.findOne({email: username}, function (error, user) {
+  User.findOne({email: email}, function (error, user) {
     if (error) {
       res.status(401)
       res.json({
@@ -244,18 +255,18 @@ module.exports.updateUser = function (req, res) {
 }
 
 module.exports.deleteUser = function (req, res) {
-  var username = req.params.email
+  var email = req.params.email
 
-  if (username === '') {
+  if (email === '') {
     res.status(401)
     res.json({
       'status': 401,
-      'message': 'username : ' + username
+      'message': 'email : ' + email
     })
     return
   }
 
-  User.remove({email: username}, function (error, user) {
+  User.remove({email: email}, function (error, user) {
     if (error) {
       res.status(401)
       res.json({

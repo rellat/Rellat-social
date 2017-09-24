@@ -1,38 +1,9 @@
-{{#feeds}}
-    <article class="card-60 social">
-        <div class="flex-content">
-            <header>
-                <p class="user">
-                    <a class="button follow" href="#" title="Follow" id = {{email}}>
-                        Follow
-                    </a>
-                    <img class="avatar-32" alt="Avatar" src={{imgSrc}} >
-                    <strong>
-                        <a title="Full Name" href="#">
-                            {{username}}
-                        </a>
-                    </strong>
-                    <span>{{writtenTime}}</span>
-                </p>
-            </header>
-            <h2>
-                {{contentTitle}}
-            </h2>
-            <p>
-                {{contentBody}}
-            </p>
-            <footer>
-                <p>
-                    <a class="bt-love" title="Love" href="#">
-                        Love
-                    </a>
-                    <a class="bt-comment" title="Comment" href="#">
-                        Comment
-                    </a>
-                </p>
-            </footer>
-        </div>
-        <!-- end .flex-content-->
-    </article>
-
-{{/feeds}}
+{{> header}}
+<textarea rows="4" cols="50" placeholder="input your story"></textarea>
+<button id='postFeedBtn'> POST</button>
+<div id='feedListTarget'>
+    <div id="feedList">
+    {{>feed}}
+    </div>
+</div>
+{{>footer}}

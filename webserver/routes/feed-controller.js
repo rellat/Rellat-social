@@ -15,16 +15,18 @@ var Feed = require('../models/feeds')
 // 새로운 feed data를 받았을 때 feed를 생성하고 save 한 다음 모든 feed를 클라이언트에게 전송한다
 module.exports.postFeed = function (req, res) {
   var feed = new Feed(req.body)
-  feed.save()
-
-  Feed.find({})
-    .sort({date: -1}).exec(function (err, allFeeds) {
-    if (err) {
-      res.error(err)
-    } else {
-      // 나중엔 응답을 다듬는다.
-      res.json(allFeeds)
-    }
+  feed.save().then(function () {
+    Feed.find({})
+      .sort({date: -1}).exec(function (err, allFeeds) {
+      if (err) {
+        res.error(err)
+      } else {
+        var data = {
+          "feeds" : allFeeds
+        }
+        res.render('feed',data)
+      }
+    })
   })
 }
 
@@ -44,24 +46,24 @@ module.exports.getFeeds = function (req, res) {
         if (err) {
           res.error(err)
         } else {
-          res.json(allFeeds)
+          res.render('main',allFeeds)
         }
       })
   } else {
-    var requestedWastes = []
+    var requestedFeeds = []
 
     for (var i = 0, len = req.body.following.length; i < len; i++) {
-      requestedWastes.push({userEmail: req.body.following[i].userEmail})
+      requestedFeeds.push({userEmail: req.body.following[i].userEmail})
     }
 
-    Waste.find({$or: requestedWastes})
+    Feed.find({$or: requestedFeeds})
       .sort({date: -1})
       .exec(function (err, allFeeds) {
         if (err) {
           res.error(err)
         } else {
           // 조건에 맞는 feed들만 찾아서 보내준다
-          res.json(allFeeds)
+          res.render('main',allFeeds)
         }
       })
   }
