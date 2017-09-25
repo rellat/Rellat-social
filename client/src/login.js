@@ -15,7 +15,7 @@ registerTxt.addEventListener('click', function () {
 loginformElement.addEventListener('submit', function (e) {
   e.preventDefault()
   loginAction.submitLogin(document.loginForm.identifier.value, document.loginForm.password.value, function (msg) {
-
+    console.log(msg.token)
     if (msg.status === 'true') {
       // store token in local storage
       if (!tokenManager.setToken(msg.token)) {

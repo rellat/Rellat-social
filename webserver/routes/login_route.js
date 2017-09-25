@@ -135,13 +135,11 @@ module.exports.login = function (req, res) {
       })
 
     } else if (user.email === email && user.password === password) {
-      var data = genToken(user)
+      var token = genToken(user)
       res.json({
         'status': 'true',
         'message': 'validate user',
-        'token': data.token,
-        'userEmail': user.email,
-        'username': user.username
+        'token': token
       })
     } else {
       res.json({
@@ -156,16 +154,14 @@ module.exports.login = function (req, res) {
 
 // private method
 function genToken (user) {
-  var expires = expiresIn(7) // 7 days
-  var token = jwt.encode({
-    exp: expires
-  }, require('../config/secret')())
 
-  return {
-    token: token,
-    expires: expires,
-    user: user
-  }
+  return jwt.encode({
+    exp: expiresIn(2),
+    email: user.email,
+    name: user.username,
+    imgsrc:user.image,
+    usrRole: user.userRole
+  }, require('../config/secret')())
 }
 
 function expiresIn (numDays) {

@@ -3,9 +3,16 @@
         <div class="flex-content">
             <header>
                 <p class="user">
+                    {{#followed}}
+                        <a class="button followed" href="#" title="followed" id= {{userEmail}}>
+                            followed
+                        </a>
+                    {{/followed}}
+                    {{#follow}}
                     <a class="button follow" href="#" title="Follow" id= {{userEmail}}>
                         Follow
                     </a>
+                    {{/follow}}
                     <img class="avatar-32" alt="Avatar" src={{userImage}}>
                     <strong>
                         <a title="Full Name" href="#">
