@@ -58,5 +58,5 @@ db.once('open', function () {
 })
 
 // Socket.io server setting
-// var SocketServer = require('./chatserver')
-// SocketServer(server)
+var SocketServer = require('./chatserver')
+SocketServer(server)

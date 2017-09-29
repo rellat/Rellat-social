@@ -23,4 +23,11 @@ router.post('/api/v1/feed/postFeed', feedManager.postFeed)
 
 router.get('/api/v1/usersAndFollowings',userManager.getAllUserList, followManager.getFollowerList)
 
+
+/*
+ * Routes for Chat room
+ */
+var ChatRoute = require('./chat')
+router.get('/chat/rooms', [require('../middlewares/validateRequest')], ChatRoute.getRoomList)
+
 module.exports = router

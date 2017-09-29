@@ -40,7 +40,7 @@ ProfileManager.prototype.verifyUser = function (cb) {
         else {
           if(body.status === 'true'){
             window.localStorage.setItem('UserProfile', JSON.stringify(self.profile))
-            self.goNextPage('/RellatSNS')
+            self.goNextPage('/RellatChat')
             console.log(body)
           }else{
             cb(error)
@@ -82,7 +82,7 @@ ProfileManager.prototype.submitLogin = function (email, password, callback) {
       // }
       window.localStorage.setItem('AuthToken', self.token)
       window.localStorage.setItem('UserProfile', JSON.stringify(self.profile))
-      self.goNextPage('/RellatSNS')
+      self.goNextPage('/RellatChat')
     } else {
       error = error || new Error(body.message)
       callback(error, body)

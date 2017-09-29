@@ -28,6 +28,7 @@ app.use(cors()) // 브라우져에서 ajax 호출 허용. blank일때 어떤 도
 // are sure that authentication is not needed
 app.all('/api/v1/*', [require('./middlewares/validateRequest')])
 app.use('/RellatSNS',express.static(path.join(__dirname, '../client/public')))
+app.use('/rellatChat',express.static(path.join(__dirname, '../client/public')))
 app.use('/', require('./routes'))
 
 

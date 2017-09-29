@@ -99,5 +99,55 @@ templates['users'] =
   '  {{/emails}}' +
   '</table>'
 
+templates['chat'] =
+  '<div id="room-section" class="room-section container clearfix">' +
+  '  <div class="room" style="width: 100%;">' +
+  '    <div class="room-header clearfix">' +
+  '      <div class="room-about">' +
+  '        <div class="room-title">Rooms</div>' +
+  '        <div id="room-num-rooms" class="room-num-rooms"></div>' +
+  '      </div>' +
+  '      <i class="fa fa-th-list"></i>' +
+  '    </div> <!-- end room-header -->' +
+  '    <div id="room-create" class="room-create clearfix" style="border-bottom: 2px solid white;">' +
+  '      <input id="room-create-name" type="text" name="title" autofocus placeholder ="Type a new room">' +
+  '      <button id="room-create-button">Create</button>' +
+  '    </div> <!-- end room-create -->' +
+  '    <div id="room-list" class="room-list">' +
+  '      <ul>' +
+  '          <!-- <a href="#"><li class="room-item">room.title</li></a> -->' +
+  '          <!-- <p class="message" style="text-align: center; padding: 0; margin: 0;">Create your first room!</p> -->' +
+  '      </ul>' +
+  '    </div> <!-- end room-list -->' +
+  '  </div> <!-- end room -->' +
+  '</div>' +
+  '<div id="chat-section" class="chat-section container clearfix">' +
+  '  <div class="chat">' +
+  '    <div class="chat-header clearfix">' +
+  '      <img src="./img/user.jpg" alt="avatar">' +
+  '      <div class="chat-about">' +
+  '        <div id="chat-room-title" class="chat-room">room.title</div>' +
+  '        <div id="chat-num-users" class="chat-num-users"> User(s)</div>' +
+  '      </div>' +
+  '      <i class="fa fa-users"></i>' +
+  '    </div> <!-- end chat-header -->' +
+  '    <div id="chat-history" class="chat-history">' +
+  '      <ul>' +
+  '      </ul>' +
+  '    </div> <!-- end chat-history -->' +
+  '    <div class="chat-message clearfix">' +
+  '      <textarea id="chat-message-text" name="message" placeholder ="Type your message" rows="3"></textarea>' +
+  '      <button id="chat-message-button" type="submit">Send</button>' +
+  '    </div> <!-- end chat-message -->' +
+  '  </div> <!-- end chat -->' +
+  '  <div class="controls">' +
+  '      <a href="#" id="logout-btn" class="logout-btn">Logout</a>' +
+  '  </div>' +
+  '  <div id="users-list" class="users-list">' +
+  '    <ul class="list">' +
+  '    </ul>' +
+  '  </div>' +
+  '</div> <!-- end container -->'
+
 //<span>date</span>
 module.exports = templates

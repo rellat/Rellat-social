@@ -1,3 +1,5 @@
+
+// 과거에 사용했던 모듈이다 수정이 제대로 끝나면 제거할 것 이다
 var feedManager = require('../rest_actions/feed_actions')
 var followManager = require('../rest_actions/follow_actions')
 

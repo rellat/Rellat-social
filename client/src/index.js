@@ -8,6 +8,7 @@ switch (path) {
   case '/RellatSNS/':
     require('./rellatSNS/snsHome')
     break
-  case '/RellatChat':
-    require('./rellatSNS/home')
+  case '/RellatChat/':
+    require('./rellatChat/chatHome')
+    break
 }
