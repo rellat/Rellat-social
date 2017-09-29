@@ -32131,6 +32131,8 @@ arguments[4][186][0].apply(exports,arguments)
 var ProfileManager = require('./../login/profilemanager')
 var io = require('socket.io-client')
 var request = require('request')
+var mustache = require('mustache')
+var templates = require('./../templates')
 
 function ChatApp (roomdom, chatdom) {
   var self = this
@@ -32172,7 +32174,7 @@ function ChatApp (roomdom, chatdom) {
 ChatApp.prototype.socketauth = function (socket) {
   console.log('is connected?')
   // 이 시그널 받는곳이 없음
-  socket.emit('authentication', {token: ProfileManager.getToken() , profile : ProfileManager.getProfile()})
+  socket.emit('authentication', {token: ProfileManager.getToken(), profile: ProfileManager.getProfile()})
   socket.on('unauthorized', function (err) {
     console.log('There was an error with the authentication:', err.message)
     console.log('refresh the page')
@@ -32294,16 +32296,7 @@ var helpers = {
     }
     console.log('user ' + JSON.stringify(users))
 
-    var html = ''
-    for (var user of users) {
-      user.username = this.encodeHTML(user.username)
-      html += `<li class="clearfix" id="user-${user.userId}">
-      <img src="${user.picture}" alt="${user.username}" />
-      <div class="about">
-      <div class="name">${user.username}</div>
-      <div class="status"><i class="fa fa-circle online"></i> online</div>
-      </div></li>`
-    }
+    var html = mustache.render(templates['chat-users'], {users: users})
 
     if (html === '') { return }
 
@@ -32324,13 +32317,16 @@ var helpers = {
     message.username = this.encodeHTML(message.username)
     message.content = this.encodeHTML(message.content)
 
-    var html = `<li>
+    var html = mustache.render(templates['chat-message'], message)
+    /*
+      `<li>
     <div class="message-data">
     <span class="message-data-name">${message.username}</span>
     <span class="message-data-time">${message.date}</span>
     </div>
     <div class="message my-message" dir="auto">${message.content}</div>
     </li>`
+    */
     document.getElementById('chat-history').getElementsByTagName('ul')[0].insertAdjacentHTML('beforeend', html)
 
     // Keep scroll bar down
@@ -32362,7 +32358,7 @@ var helpers = {
 
 module.exports = ChatApp
 
-},{"./../login/profilemanager":187,"request":338,"socket.io-client":351}],189:[function(require,module,exports){
+},{"./../login/profilemanager":187,"./../templates":192,"mustache":328,"request":338,"socket.io-client":351}],189:[function(require,module,exports){
 var ChatApp = require('./chat')
 var profileManager = require('./../login/profilemanager')
 var mustache = require('mustache')
@@ -32621,6 +32617,27 @@ templates['chat'] =
   '    </ul>' +
   '  </div>' +
   '</div> <!-- end container -->'
+
+templates['chat-users'] =
+  '{{#users}}' +
+  '<li class="clearfix" id="user-{{userId}}">' +
+  '      <img src="{{picture}}" alt="{{username}}" />' +
+  '      <div class="about">' +
+  '      <div class="name">{{username}}</div>' +
+  '      <div class="status"><i class="fa fa-circle online"></i> online</div>' +
+  '      </div></li>' +
+  '{{/users}}'
+
+templates['chat-message'] = '<li>' +
+  '    <div class="message-data">' +
+  '    <span class="message-data-name">{{username}}</span>' +
+  '    <span class="message-data-time">{{date}}</span>' +
+  '    </div>' +
+  '    <div class="message my-message" dir="auto">{{content}}</div>' +
+  '    </li>'
+
+
+
 
 //<span>date</span>
 module.exports = templates

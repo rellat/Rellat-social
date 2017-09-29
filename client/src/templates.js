@@ -149,5 +149,26 @@ templates['chat'] =
   '  </div>' +
   '</div> <!-- end container -->'
 
+templates['chat-users'] =
+  '{{#users}}' +
+  '<li class="clearfix" id="user-{{userId}}">' +
+  '      <img src="{{picture}}" alt="{{username}}" />' +
+  '      <div class="about">' +
+  '      <div class="name">{{username}}</div>' +
+  '      <div class="status"><i class="fa fa-circle online"></i> online</div>' +
+  '      </div></li>' +
+  '{{/users}}'
+
+templates['chat-message'] = '<li>' +
+  '    <div class="message-data">' +
+  '    <span class="message-data-name">{{username}}</span>' +
+  '    <span class="message-data-time">{{date}}</span>' +
+  '    </div>' +
+  '    <div class="message my-message" dir="auto">{{content}}</div>' +
+  '    </li>'
+
+
+
+
 //<span>date</span>
 module.exports = templates

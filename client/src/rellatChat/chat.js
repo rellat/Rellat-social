@@ -1,6 +1,8 @@
 var ProfileManager = require('./../login/profilemanager')
 var io = require('socket.io-client')
 var request = require('request')
+var mustache = require('mustache')
+var templates = require('./../templates')
 
 function ChatApp (roomdom, chatdom) {
   var self = this
@@ -42,7 +44,7 @@ function ChatApp (roomdom, chatdom) {
 ChatApp.prototype.socketauth = function (socket) {
   console.log('is connected?')
   // 이 시그널 받는곳이 없음
-  socket.emit('authentication', {token: ProfileManager.getToken() , profile : ProfileManager.getProfile()})
+  socket.emit('authentication', {token: ProfileManager.getToken(), profile: ProfileManager.getProfile()})
   socket.on('unauthorized', function (err) {
     console.log('There was an error with the authentication:', err.message)
     console.log('refresh the page')
@@ -164,16 +166,7 @@ var helpers = {
     }
     console.log('user ' + JSON.stringify(users))
 
-    var html = ''
-    for (var user of users) {
-      user.username = this.encodeHTML(user.username)
-      html += `<li class="clearfix" id="user-${user.userId}">
-      <img src="${user.picture}" alt="${user.username}" />
-      <div class="about">
-      <div class="name">${user.username}</div>
-      <div class="status"><i class="fa fa-circle online"></i> online</div>
-      </div></li>`
-    }
+    var html = mustache.render(templates['chat-users'], {users: users})
 
     if (html === '') { return }
 
@@ -194,13 +187,8 @@ var helpers = {
     message.username = this.encodeHTML(message.username)
     message.content = this.encodeHTML(message.content)
 
-    var html = `<li>
-    <div class="message-data">
-    <span class="message-data-name">${message.username}</span>
-    <span class="message-data-time">${message.date}</span>
-    </div>
-    <div class="message my-message" dir="auto">${message.content}</div>
-    </li>`
+    var html = mustache.render(templates['chat-message'], message)
+
     document.getElementById('chat-history').getElementsByTagName('ul')[0].insertAdjacentHTML('beforeend', html)
 
     // Keep scroll bar down
