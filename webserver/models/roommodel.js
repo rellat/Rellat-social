@@ -81,6 +81,7 @@ var getUsers = function (room, socket, callback) {
 */
 var removeUser = function (socket, callback) {
   // Get current user's id
+  console.log(socket.client.profile)
   var userId = socket.client.profile.userId
 
   find(function (err, rooms) {

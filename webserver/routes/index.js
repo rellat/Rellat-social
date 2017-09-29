@@ -28,6 +28,6 @@ router.get('/api/v1/usersAndFollowings',userManager.getAllUserList, followManage
  * Routes for Chat room
  */
 var ChatRoute = require('./chat')
-router.get('/chat/rooms', [require('../middlewares/validateRequest')], ChatRoute.getRoomList)
+router.get('/api/v1/chat/rooms', ChatRoute.getRoomList)
 
 module.exports = router

@@ -31889,6 +31889,7 @@ switch (path) {
     break
   case '/RellatChat/':
     require('./rellatChat/chatHome')
+    break
 }
 },{"./login/loginHome":185,"./rellatChat/chatHome":189,"./rellatSNS/snsHome":191}],185:[function(require,module,exports){
 var ProfileManager = require('./profileManager')
@@ -32141,7 +32142,7 @@ function ChatApp (roomdom, chatdom) {
   // set room list
   request({
     method: 'GET',
-    url: 'http://localhost:3000/chat/rooms',
+    url: 'http://localhost:3000/api/v1/chat/rooms',
     headers:
       {
         'cache-control': 'no-cache',
@@ -32170,7 +32171,8 @@ function ChatApp (roomdom, chatdom) {
 
 ChatApp.prototype.socketauth = function (socket) {
   console.log('is connected?')
-  socket.emit('authentication', {token: ProfileManager.getToken()})
+  // 이 시그널 받는곳이 없음
+  socket.emit('authentication', {token: ProfileManager.getToken() , profile : ProfileManager.getProfile()})
   socket.on('unauthorized', function (err) {
     console.log('There was an error with the authentication:', err.message)
     console.log('refresh the page')

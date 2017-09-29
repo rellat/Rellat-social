@@ -20,9 +20,10 @@ module.exports = {
 function authenticate (socket, data, callback) {
   var decoded = jwt.decode(data.token, require('../webserver/config/secret')())
   if (decoded.exp <= Date.now()) callback(new Error('Token Expired'))
-  userdb.findOne({email: decoded.email}, function (err, user) {
+
+  userdb.findOne({email: data.profile.email}, function (err, user) {
     if (err || !user) return callback(new Error('User not found'))
-    return callback(null, user.email === decoded.email)
+    return callback(null, user.email === data.profile.email)
   })
 }
 
@@ -33,7 +34,7 @@ function postAuthenticate (socket, data) {
     if (err) {
       console.log(err.stack)
     }
-    socket.client.profile = decoded
+    socket.client.profile = data.profile
     console.log('auth succeed: ' + socket.id)
   })
 }
