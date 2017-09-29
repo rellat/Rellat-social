@@ -1,30 +1,26 @@
 var express = require('express')
 var router = express.Router()
 
-var loginRoute = require('./login_route')
-router.post('/user/checkExist', loginRoute.checkExist)
-router.post('/user/registerUser', loginRoute.registerUser)
-router.post('/user/login', loginRoute.login)
+var userManager = require('./userManager')
+// login
+router.post('/user/registerUser', userManager.registerUser)
+router.post('/user/login', userManager.login)
+router.get('/api/v1/user/profile', userManager.getOneUserData)
+// get user data
+router.get('/api/v1/user', userManager.getOneUserData)
+router.put('/api/v1/userUpdate', userManager.updateUser)
+router.delete('/api/v1/userDelete', userManager.deleteUser)
 
-var homeRoute = require('./home_route')
-router.get('/main', homeRoute.getMainPage)
-router.post('/api/v1/feed/AllFeeds', homeRoute.getAllFeeds)
-router.post('/api/v1/feed/postFeed', homeRoute.postFeed)
+var followManager = require('./followManager')
+router.post('/api/v1/follow', followManager.follow)
+router.post('/api/v1/unfollow', followManager.unfollow)
+router.get('/api/v1/followerList', followManager.getFollowerList)
+router.get('/api/v1/followingList', followManager.getFollowingList)
 
-var apiRoute = require('./api_route')
-router.get('/api/v1/admin/users', apiRoute.getAllUserList)
-router.get('/api/v1/admin/user/:email', apiRoute.getOneUserData)
-router.put('/api/v1/admin/user/:email', apiRoute.updateUser)
-router.delete('/api/v1/admin/user/:email', apiRoute.deleteUser)
+var feedManager = require('./feedManager')
+router.post('/api/v1/feed/AllFeeds', feedManager.getAllFeeds)
+router.post('/api/v1/feed/postFeed', feedManager.postFeed)
 
-router.post('/api/v1/follow', apiRoute.follow)
-router.post('/api/v1/unfollow', apiRoute.unfollow)
-router.get('/api/v1/followerList', apiRoute.getFollowerList)
-router.get('/api/v1/followingList', apiRoute.getFollowingList)
-
-// 지금은 index를 보여주지만 나중에는 home 페이지로 들어가도록 하자
-router.get('/', function (req, res) {
-  res.render('index', {})
-})
+router.get('/api/v1/usersAndFollowings',userManager.getAllUserList, followManager.getFollowerList)
 
 module.exports = router

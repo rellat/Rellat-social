@@ -1,13 +1,13 @@
-
-var dataManager = null
+var profileManager = require('./../login/profileManager')
 var request = require('request')
 
-module.exports.follow = function (targetId, next, callback) {
-  var token = dataManager.getToken()
-  if (!token) return
+function FollowManager () {
+  var self = this
 
-  var userData = dataManager.getUserData()
-  if (targetId === userData.email) return
+  self.followList = null
+}
+
+FollowManager.prototype.follow = function (targetId, callback) {
 
   request({
     method: 'POST',
@@ -16,25 +16,19 @@ module.exports.follow = function (targetId, next, callback) {
       {
         'cache-control': 'no-cache',
         'content-type': 'application/json',
-        'x-access-token': token
+        'x-access-token': profileManager.token
       },
     body: {
       targetId: targetId
     },
     json: true
   }, function (error, response, body) {
-    console.log(body)
-    next(body, callback)
+    callback(body)
   })
 
 }
 
-module.exports.unfollow = function (targetId, next, callback) {
-  var token = dataManager.getToken()
-  if (!token) return
-
-  var userData = dataManager.getUserData()
-  if (targetId === userData.email) return
+FollowManager.prototype.unfollow = function (targetId, callback) {
 
   request({
     method: 'POST',
@@ -43,21 +37,18 @@ module.exports.unfollow = function (targetId, next, callback) {
       {
         'cache-control': 'no-cache',
         'content-type': 'application/json',
-        'x-access-token': token
+        'x-access-token': profileManager.token
       },
     body: {
       targetId: targetId
     },
     json: true
   }, function (error, response, body) {
-    console.log(body)
-    next(body, callback)
+    callback(body)
   })
 }
 // 현재 사용자의 follower과 following 배열을 서버로부터 받아올 수 있다
-module.exports.getFollowers = function (next, callback) {
-  var token = dataManager.getToken()
-  if (!token) return
+FollowManager.prototype.getFollowers = function (next, callback) {
 
   request({
     method: 'GET',
@@ -66,16 +57,15 @@ module.exports.getFollowers = function (next, callback) {
       {
         'cache-control': 'no-cache',
         'content-type': 'application/json',
-        'x-access-token': token
+        'x-access-token': profileManager.token
       },
     json: true
   }, function (error, response, body) {
-
-    next(body, callback)
+    callback(body)
   })
 }
 
-module.exports.getFollowings = function (next, callback) {
+FollowManager.prototype.getFollowings = function (next, callback) {
   var token = dataManager.getToken()
   if (!token) return
 
@@ -86,12 +76,11 @@ module.exports.getFollowings = function (next, callback) {
       {
         'cache-control': 'no-cache',
         'content-type': 'application/json',
-        'x-access-token': token
+        'x-access-token': profileManager.token
       },
     json: true
   }, function (error, response, body) {
-
-    next(body, callback)
+    callback(body)
   })
 
 }

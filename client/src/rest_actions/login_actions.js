@@ -12,8 +12,22 @@ module.exports.submitLogin = function (email, password, callback) {
     body: {email: email, password: password},
     json: true
   }, function (error, response, body) {
-    if (error) throw new Error(error)
-    callback(body)
+    if (!error && body.status === 'true') {
+      self.token = body.token
+      self.profile = body.profile
+      // {
+      //   email: user.email,
+      //   name: user.username,
+      //   picture: user.image,
+      //   usrRole: user.userRole
+      // }
+      window.localStorage.setItem('AuthToken', self.token)
+      window.localStorage.setItem('UserProfile', JSON.stringify(self.profile))
+    } else {
+      error = error || new Error(body.message)
+    }
+    console.log(window.localStorage.getItem('UserProfile'))
+    //callback(error, body)
   })
 }
 

@@ -7,13 +7,13 @@ module.exports = function (req, res, next) {
   // We skip the token outh for [OPTIONS] requests.
   //if(req.method == 'OPTIONS') next();
   var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token']
-  var key
+  var key = (req.body && req.body.x_key) || (req.query && req.query.x_key) || req.headers['x-key']
 
-  if (token) {
+  if (token || key) {
     try {
       var decoded = jwt.decode(token, require('../config/secret.js')())
       if (decoded.exp <= Date.now()) {
-        res.status(400)
+        res.error(400)
         res.json({
           'status': 400,
           'message': 'Token Expired'
@@ -21,12 +21,11 @@ module.exports = function (req, res, next) {
         return
       }
 
-      key = decoded.email
       // Authorize the user to see if s/he can access our resources
       user.findOne({email: key}, function (error, user) {
 
         if (error) {
-          res.status(401)
+          res.error(error)
           res.json({
             'status': 401,
             'message': 'error in validateRequest'

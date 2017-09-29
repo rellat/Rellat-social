@@ -1,5 +1,5 @@
-var feedManager = require('./rest_actions/feed_actions')
-var followManager = require('./rest_actions/follow_actions')
+var feedManager = require('../rest_actions/feed_actions')
+var followManager = require('../rest_actions/follow_actions')
 
 var postButton = document.getElementById('postFeedBtn')
 var textArea = document.querySelector('textarea')
@@ -38,7 +38,6 @@ function inithome(body){
     // 처음에 불릴 때 follow목록을 받아서 getAllFeed를 실행한다
     followManager.getFollowings(feedManager.getAllFeed,inithome)
   }
-
   initFollowBtn()
   initFollowedBtn()
 }

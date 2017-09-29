@@ -1,15 +1,14 @@
+var profileManager = require('./../login/profileManager')
 var request = require('request')
-var tokenManager = null
+function FeedManager () {
+  var self = this
 
-module.exports.postFeed = function (contentTitle, contentBody,getFollowers, next,callback) {
-  var token = window.localStorage.getItem('AuthToken')
-  var userdata = window.localStorage.getItem('UserProfile')
-  // 토큰이 없다면 login 페이지로 넘어가도록 하고 아니라면 token에서 유저의 id와 email, image 경로 이름 등을 디코드 해서 같이 보낸다
-  if (!token) {
+  self.feeds = null
+}
 
-    return
-  }
-
+FeedManager.prototype.postFeed = function (contentBody, callback) {
+  var profile = profileManager.getProfile()
+  var token =  profileManager.getToken()
   var options = {
     method: 'POST',
     url: 'http://localhost:3000/api/v1/feed/postFeed',
@@ -18,26 +17,25 @@ module.exports.postFeed = function (contentTitle, contentBody,getFollowers, next
         'cache-control': 'no-cache',
         'content-type': 'application/json',
         'x-access-token': token,
-        'x-key': userdata.email,
+        'x-key': profile.email
       },
     body: {
-      contentBody: contentBody
+      contentBody: contentBody,
+      profile: profile
     },
     json: true
   }
 
   request(options, function (error, response, body) {
     if (error) throw new Error(error)
-    if(body.flag){
-      getFollowers(next,callback)
-    }
+    // 모든 feed가 들어온다
+    callback(body)
 
   })
-
 }
-
+////////asfasdalsjdlasnlkdmlkasd 여기부터!!!!!!ㅁㄴ어ㅣㅁ너ㅏ아ㅣㅁㄴ이ㅢㅡ
 // 지금은 follow 안 한 것도 볼 수 있도록 이렇게 한건데 나중에는 follow 목록만 보여줄꺼
-module.exports.getAllFeed = function (followList, callback) {
+FeedManager.prototype.getAllFeed = function (callback) {
   var token = tokenManager.getToken()
   // 토큰이 없다면 login 페이지로 넘어가도록 하고 아니라면 token에서 유저의 id와 email, image 경로 이름 등을 디코드 해서 같이 보낸다
   if (!token) {
@@ -46,23 +44,24 @@ module.exports.getAllFeed = function (followList, callback) {
   }
 
   var options = {
-    method: 'POST',
+    method: 'GET',
     url: 'http://localhost:3000/api/v1/feed/AllFeeds',
     headers:
       {
         'cache-control': 'no-cache',
         'content-type': 'application/json',
-        'x-access-token': token
+        'x-access-token': profileManager.token
       },
-    body: {
-      followList: followList
-    },
     json: true
   }
 
   request(options, function (error, response, body) {
     if (error) throw new Error(error)
+    // callback으로 모든 feed가 들어온다
+    // 후처리는 클라이언트에서 한다
     callback(body)
   })
 
 }
+
+module.exports = new FeedManager()

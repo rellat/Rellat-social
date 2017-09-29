@@ -1,27 +1,27 @@
 var Feed = require('../models/feeds')
 var jwt = require('jwt-simple')
 
-module.exports.getMainPage = function (req, res) {
-  res.render('main')
-}
-
 // 새로운 feed data를 받았을 때 feed를 생성하고 save 한 다음 모든 feed를 클라이언트에게 전송한다
 module.exports.postFeed = function (req, res) {
-  var token = req.headers['x-access-token']
-  var data = jwt.decode(token, require('../config/secret.js')())
-
+  var profile = req.body.profile
+  console.log(req.body.profile)
   var feed = new Feed({
-    user: data.name,
-    userEmail: data.email,
-    userImage: data.imgsrc,
-    contentTitle: req.body.contentTitle,
+    user: profile.username,
+    userEmail: profile.email,
+    userPicture: profile.picture,
     contentBody: req.body.contentBody
   })
 
   feed.save().then(function () {
-    res.json({
-      flag : true
-    })
+    Feed.find({})
+      .sort({date: -1})
+      .exec(function (err, allFeeds) {
+        if (err) {
+          res.error(err)
+        } else {
+          res.json(allFeeds)
+        }
+      })
   })
 }
 
