@@ -76,7 +76,7 @@ var auth = {
 
     var username = req.body.email || ''
     var password = req.body.password || ''
-    console.log(username)
+
     if (username == '' || password == '') {
       res.status(401)
       res.json({

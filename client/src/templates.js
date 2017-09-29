@@ -1,6 +1,30 @@
 var templates = {}
 
-templates['login'] =
+templates['nav'] = '<header id = "navHeader">' +
+  '  <section>' +
+  '  <a id="logo" target="_blank">' +
+  '     <img src="img/rellat_logo.png"></a>' +
+  '  <label for="toggle-1" class="nav-toggle-menu">' +
+  '  <ul>' +
+  '    <li></li>' +
+  '    <li></li>' +
+  '    <li></li>' +
+  '  </ul>' +
+  '  </label>' +
+  '  <input type="checkbox" id="toggle-1">' +
+  '  <nav>' +
+  '    <ul>' +
+  '      <li><a href="#logo"><i class="fa fa-home"></i>Home </a></li>' +
+  '      <li><a href="#about"><i class="fa fa-user"></i>About </a></li>' +
+  '      <li><a href="#portfolio"><i class="fa fa-thumb-tack"></i>Portfolio </a></li>' +
+  '      <li><a href="#services"><i class="fa fa-gears"></i>Services </a></li>' +
+  '      <li><a href="#gallery"><i class="fa fa-picture-o"></i>Gallery </a></li>' +
+  '      <li><a href="#contact"><i class="fa fa-phone"></i>Contact </a></li>' +
+  '    </ul>' +
+  '  </nav>' +
+  '</header>'
+
+templates['login'] = templates['nav'] +
   '<div class="login-page">' +
   '    <div class="form">' +
   '        <form name="loginForm" id="login-form">' +
@@ -72,15 +96,15 @@ templates['feed'] =
   '{{/feeds}}'
 
 templates['follow'] = '{{#followed}}' +
-  '                        <a class="button followed" href="#" title="followed" id= {{userEmail}}>' +
-  '                            followed' +
-  '                        </a>' +
-  '                    {{/followed}}' +
-  '                    {{#follow}}' +
-  '                    <a class="button follow" href="#" title="Follow" id= {{userEmail}}>' +
-  '                        Follow' +
-  '                    </a>' +
-  '                    {{/follow}}'
+  ' <a class="button followed" href="#" title="followed" id= {{userEmail}}>' +
+  '   followed' +
+  '</a>' +
+  '{{/followed}}' +
+  '{{#follow}}' +
+  ' <a class="button follow" href="#" title="Follow" id= {{userEmail}}>' +
+  '   Follow' +
+  ' </a>' +
+  '{{/follow}}'
 
 // 이건 나중에 변경
 templates['users'] =
@@ -166,9 +190,6 @@ templates['chat-message'] = '<li>' +
   '    </div>' +
   '    <div class="message my-message" dir="auto">{{content}}</div>' +
   '    </li>'
-
-
-
 
 //<span>date</span>
 module.exports = templates

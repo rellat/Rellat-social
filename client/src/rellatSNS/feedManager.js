@@ -42,7 +42,6 @@ FeedManager.prototype.getAllFeed = function (callback) {
     //request('http://localhost:3000/error',)
     return
   }
-
   var options = {
     method: 'GET',
     url: 'http://localhost:3000/api/v1/feed/AllFeeds',

@@ -4,7 +4,7 @@ var jwt = require('jwt-simple')
 // 새로운 feed data를 받았을 때 feed를 생성하고 save 한 다음 모든 feed를 클라이언트에게 전송한다
 module.exports.postFeed = function (req, res) {
   var profile = req.body.profile
-  console.log(req.body.profile)
+
   var feed = new Feed({
     user: profile.username,
     userEmail: profile.email,
