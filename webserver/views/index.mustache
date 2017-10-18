@@ -1,24 +1,68 @@
 {{>header}}
-<div class="login-page">
-    <div class="form">
-
-        <form name="loginForm" id="login-form">
-            <input type="email" placeholder="user email" autocomplete="username" name="identifier" id="identifierId"/>
-            <input type="password" placeholder="password" autocomplete="password" name="password" id="passwordId"/>
-            <input type="submit" name="submit" value="login"/>
-            <p class="message">Not registered? <a href="#" id="go-register">Create an account</a></p>
-        </form>
-
-        <form name="registerForm" id="register-form">
-            <input type="email" name="identifier" placeholder="email address"/>
-            <input type="password" name="password" placeholder="password"/>
-            <input type="text" name="username" placeholder="name"/>
-
-            <input type="submit" name="submit" value="create"/>
-            <p class="message">Already registered? <a href="#" id="go-login">Sign In</a></p>
-        </form>
-
-
+<!-- nav -->
+<nav class="sidebar">
+  <div class="nav-header">
+    <div class="logo-wrap">
+      <a class="logo-icon" href="/"><img alt="logo-icon" src="/img/rellat_logo_white.png" width="38px"></a>
+      <a class="logo-text" href="/">Rellat</a>
     </div>
-</div>
+
+    <div class="nav-search">
+      <div class="search">
+        <i class="material-icons">search</i>
+        <input type="search" name="search" placeholder="Search">
+      </div>
+    </div>
+  </div>
+  <ul class="nav-categories ul-base">
+    <li><a target="_blank" href="http://www.rellat.com" style="margin-left:12px;">Rellat Blog</a></li>
+    <li><a target="_blank" href="http://fb.me/rellatkr" style="margin-left:12px;">Rellat Team</a></li>
+  </ul>
+  <div class="copyright">
+    <span>&copy; 2017 Project <a href="http://www.rellat.com" class="link">Rellat</a></span>
+    <span>Developed by <a href="http://fb.me/rellatkr" target="_blank">Rellat Team</a></span>
+  </div>
+</nav><!-- @end nav -->
+
+<!-- header -->
+<header id="content-header">
+  <div class="header-inner clearfix">
+    <div class="nav-btn nav-slider">
+      <i class="material-icons">menu</i>
+    </div>
+    <div class="header-logo">
+        <a target="_self" href="/"><div class="logo"><img src="/img/rellat_logo_white.png" height="38px"></div></a>
+    </div>
+    <div class="header-categories">
+      <ul class="ul-base">
+        <li class="dropdown">
+          <a class="dropdown-toggle" href="#"><span>browse</span> <i class="material-icons">keyboard_arrow_down</i></a>
+          <ul class="dropdown-menu ul-base">
+            <li><a target="_blank" href="http://www.rellat.com" style="margin-left:12px;">Rellat Blog</a></li>
+            <li><a target="_blank" href="http://fb.me/rellatkr" style="margin-left:12px;">Rellat Team</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="header-search">
+      <div class="search">
+        <i class="material-icons">search</i>
+        <input type="search" name="search" placeholder="Search">
+      </div>
+    </div>
+    <div class="header-menu">
+      <ul class="ul-base">
+        <li><div id="header-profile"><a id="header-signin" href="javascript:void(0)">Sign in</a> / <a id="header-signup" href="javascript:void(0)">Sign up</a></div></li>
+      </ul>
+    </div>
+  </div>
+</header><!-- @end header -->
+
+<!-- Main content -->
+<div id="content-body"></div><!-- @end main -->
+
+<!-- Footer -->
+<footer id="content-footer"></footer><!-- @end footer -->
+
+<div class="overlay"></div>
 {{>footer}}

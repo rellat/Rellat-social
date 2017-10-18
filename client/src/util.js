@@ -1,5 +1,5 @@
 
-module.exports.fadeOutIn = function (outElem, InElement, speed) {
+function fadeOutIn (outElem, InElement, speed) {
   if (!outElem.style.opacity) {
     outElem.style.opacity = 1
   } // end if
@@ -20,3 +20,32 @@ module.exports.fadeOutIn = function (outElem, InElement, speed) {
     }
   }, speed / 50)
 } // end fadeOut()
+
+function toggleClass (obj, classname) {
+  var targetobj = obj
+  if (typeof obj === 'string') { targetobj = document.getElementById('obj') }
+  var classes = targetobj.className.match(/[^\x20\t\r\n\f]+/g) || []
+  var rmatch = classes.indexOf(classname)
+
+  if (rmatch > -1) {
+    classes.splice(rmatch, 1)
+    targetobj.className = classes.join(' ')
+  } else {
+    classes.push(classname)
+    targetobj.className = classes.join(' ')
+  }
+}
+
+function hasClass (self, selector) {
+  var className = ' ' + selector + ' '
+  if ((' ' + self.className + ' ').replace(/[\n\t\r]/g, ' ').indexOf(className) > -1) {
+    return true
+  }
+  return false
+}
+
+module.exports = {
+  fadeOutIn: fadeOutIn,
+  toggleClass: toggleClass,
+  hasClass: hasClass
+}

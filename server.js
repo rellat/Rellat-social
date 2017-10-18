@@ -54,7 +54,7 @@ mongoose.connect('mongodb://127.0.0.1/rellatlogin')
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', function () {
   debug('Connected to mongod server')
-  mongoose.Promise = global.Promise;
+  mongoose.Promise = global.Promise
 })
 
 // Socket.io server setting

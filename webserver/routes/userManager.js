@@ -5,6 +5,7 @@ var User = require('../models/user')
 // 회원가입 form에서 중복확인 버튼을 만든다던가 할 수 있겠다
 
 module.exports.registerUser = function (req, res) {
+  console.log('what?')
   var email = req.body.email || ''
   var password = req.body.password || ''
   var username = req.body.username || ''
@@ -20,7 +21,6 @@ module.exports.registerUser = function (req, res) {
   }
 
   User.findOne({email: email}, function (error, user) {
-
     if (error) {
       res.status(401)
       res.json({
@@ -35,7 +35,7 @@ module.exports.registerUser = function (req, res) {
         email: email,
         username: username,
         password: password,
-        userRole: 'admin',
+        userRole: 'default',
         picture: picture,
         following: [],
         followers: []
@@ -48,8 +48,7 @@ module.exports.registerUser = function (req, res) {
             'status': 401,
             'message': 'oopse unknown error In registerUser'
           })
-        }
-        else {
+        } else {
           res.json({
             'status': 'true',
             'message': 'successfully registered'
@@ -62,12 +61,10 @@ module.exports.registerUser = function (req, res) {
         'message': 'user already exist'
       })
     }
-
   })
 }
 
 module.exports.login = function (req, res) {
-
   var email = req.body.email || ''
   var password = req.body.password || ''
 
@@ -81,7 +78,6 @@ module.exports.login = function (req, res) {
   }
 
   User.findOne({email: email}, function (error, user) {
-
     if (error) {
       res.status(401)
       res.json({
@@ -96,7 +92,6 @@ module.exports.login = function (req, res) {
         'status': 'false',
         'message': 'Non-validate user'
       })
-
     } else {
       user.validatePassword(password, function (err, isMatch) {
         if (err || !isMatch) {
@@ -116,20 +111,17 @@ module.exports.login = function (req, res) {
             'email': user.email,
             'picture': user.picture,
             'userId': user.userId,
-            'username': user.username
+            'username': user.username,
+            'userRole': user.userRole
           }
         })
-
       }) // end validatePassword
     }// end if
   })// end findOne
 }// end login
 
-
-module.exports.getAllUserList = function (req, res ,next) {
-
+module.exports.getAllUserList = function (req, res, next) {
   User.find({}, function (error, users) {
-
     if (error) {
       res.status(401)
       res.json({
@@ -137,21 +129,30 @@ module.exports.getAllUserList = function (req, res ,next) {
         'message': 'error in AllUserList'
       })
     } else {
-      res.users = users
+      var secureList = []
+      users.forEach(function (user) {
+        secureList.push({
+          'email': user.email,
+          'picture': user.picture,
+          'userId': user.userId,
+          'username': user.username,
+          'userRole': user.userRole
+        })
+      })
+      res.users = secureList
       next()
     }
   })
 }
 
 module.exports.getOneUserData = function (req, res) {
-
   var emailinkey = (req.body && req.body.x_key) || (req.query && req.query.x_key) || req.headers['x-key']
 
   if (!emailinkey) {
     res.status(401)
     res.json({
       'status': 401,
-      'message': 'email : ' + email
+      'message': 'email : ' + emailinkey
     })
     return
   }
@@ -167,7 +168,13 @@ module.exports.getOneUserData = function (req, res) {
       res.json({
         'status': 'true',
         'message': 'find user!',
-        'userData': user
+        'profile': {
+          'email': user.email,
+          'picture': user.picture,
+          'userId': user.userId,
+          'username': user.username,
+          'userRole': user.userRole
+        }
       })
     } else {
       res.json({
@@ -213,7 +220,13 @@ module.exports.updateUser = function (req, res) {
           res.json({
             'status': 'true',
             'message': 'update user!',
-            'userData': updatedUser
+            'profile': {
+              'email': updatedUser.email,
+              'picture': updatedUser.picture,
+              'userId': updatedUser.userId,
+              'username': updatedUser.username,
+              'userRole': updatedUser.userRole
+            }
           })
         }
       })
@@ -254,10 +267,8 @@ module.exports.deleteUser = function (req, res) {
   })
 }
 
-
 // private method
 function genToken (user) {
-
   return jwt.encode({
     exp: expiresIn(2)
   }, require('../config/secret')())

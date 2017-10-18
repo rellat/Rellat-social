@@ -1,31 +1,33 @@
 var templates = {}
 
-templates['nav'] = '<header id = "navHeader">' +
-  '  <section>' +
-  '  <a id="logo" target="_blank">' +
-  '     <img src="img/rellat_logo.png"></a>' +
-  '  <label for="toggle-1" class="nav-toggle-menu">' +
-  '  <ul>' +
-  '    <li></li>' +
-  '    <li></li>' +
-  '    <li></li>' +
-  '  </ul>' +
-  '  </label>' +
-  '  <input type="checkbox" id="toggle-1">' +
-  '  <nav>' +
-  '    <ul>' +
-  '      <li><a href="#logo"><i class="fa fa-home"></i>Home </a></li>' +
-  '      <li><a href="#about"><i class="fa fa-user"></i>About </a></li>' +
-  '      <li><a href="#portfolio"><i class="fa fa-thumb-tack"></i>Portfolio </a></li>' +
-  '      <li><a href="#services"><i class="fa fa-gears"></i>Services </a></li>' +
-  '      <li><a href="#gallery"><i class="fa fa-picture-o"></i>Gallery </a></li>' +
-  '      <li><a href="#contact"><i class="fa fa-phone"></i>Contact </a></li>' +
-  '    </ul>' +
-  '  </nav>' +
-  '</header>'
+templates['nav'] = '<section>' +
+  '<a id="logo" target="_blank">' +
+  '   <img src="img/rellat_logo.png"></a>' +
+  // '<label for="toggle-1" class="nav-toggle-menu">' +
+  // '<ul>' +
+  // '  <li></li>' +
+  // '  <li></li>' +
+  // '  <li></li>' +
+  // '</ul>' +
+  // '</label>' +
+  // '<input type="checkbox" id="toggle-1">' +
+  // '<nav>' +
+  // '  <ul>' +
+  // '    <li><a href="#logo"><i class="fa fa-home"></i>Home </a></li>' +
+  // '    <li><a href="#about"><i class="fa fa-user"></i>About </a></li>' +
+  // '    <li><a href="#portfolio"><i class="fa fa-thumb-tack"></i>Portfolio </a></li>' +
+  // '    <li><a href="#services"><i class="fa fa-gears"></i>Services </a></li>' +
+  // '    <li><a href="#gallery"><i class="fa fa-picture-o"></i>Gallery </a></li>' +
+  // '    <li><a href="#contact"><i class="fa fa-phone"></i>Contact </a></li>' +
+  // '  </ul>' +
+  // '</nav>' +
+  '<nav>' +
+  '<a href="#contact">Sign in</a> or <a href="#contact">Sign up</a>' +
+  '</nav>'
 
-templates['login'] = templates['nav'] +
-  '<div class="login-page">' +
+templates['intro'] = 'Hello, World!!'
+
+templates['login'] = '<div class="login-page">' +
   '    <div class="form">' +
   '        <form name="loginForm" id="login-form">' +
   '            <input type="email" placeholder="user email" autocomplete="username" name="identifier" id="identifierId"/>' +
@@ -42,6 +44,8 @@ templates['login'] = templates['nav'] +
   '        </form>' +
   '    </div>' +
   '</div>'
+
+templates['header-profile'] = '<a id="header-signout" href="javascript:void(0)">Sign out</a>'
 
 templates['snsHome'] =
   '<textarea rows="4" cols="50" placeholder="input your story"></textarea>' +
@@ -191,5 +195,4 @@ templates['chat-message'] = '<li>' +
   '    <div class="message my-message" dir="auto">{{content}}</div>' +
   '    </li>'
 
-//<span>date</span>
 module.exports = templates

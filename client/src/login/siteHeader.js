@@ -1,0 +1,116 @@
+var ProfileManager = require('./profileManager')
+var util = require('../util')
+var template = require('../templates')
+var mustache = require('mustache')
+
+function SiteHeader (options) {
+  var self = this
+
+  self.loginCheckCallback = options.loginCheck || function () {}
+  /**
+   * Header and Nav Setting
+   */
+  document.getElementsByClassName('dropdown-toggle')[0].addEventListener('click', function (e) {
+    e.stopPropagation()
+    e.preventDefault()
+
+    var self = document.getElementsByClassName('dropdown')[0]
+    util.toggleClass(self, 'open')
+  })
+  document.addEventListener('click', function (e) {
+    var self = document.getElementsByClassName('dropdown')[0]
+    if (util.hasClass(self, 'open')) {
+      util.toggleClass(self, 'open')
+    }
+  })
+
+  document.getElementsByClassName('nav-slider')[0].addEventListener('click', function (e) {
+    var self = document.getElementsByTagName('nav')[0]
+    util.toggleClass(self, 'open')
+    var overlay = document.getElementsByClassName('overlay')[0]
+    overlay.style.display = 'block'
+  })
+
+  document.getElementsByClassName('overlay')[0].addEventListener('click', function (e) {
+    var self = document.getElementsByTagName('nav')[0]
+    if (util.hasClass(self, 'open')) {
+      util.toggleClass(self, 'open')
+    }
+    e.target.style.display = 'none'
+  })
+
+  /**
+   * Profile Setting
+   */
+  ProfileManager.verifyUser(function (err, profile) {
+    if (err) {
+      console.log(err.message)
+      self.setNavProfile()
+      self.loginCheckCallback(false)
+    } else {
+      self.setNavProfile(profile)
+      self.loginCheckCallback(true)
+    }
+  })
+}
+SiteHeader.prototype.setNavProfile = function (profile) {
+  var self = this
+  if (!profile) {
+    // 네비에 프로파일 부분을 로그인/회원가입 버튼 이벤트 설정
+    document.getElementById('header-signin').addEventListener('click', function (e) { self.showLogin(false) })
+    document.getElementById('header-signup').addEventListener('click', function (e) { self.showLogin(true) })
+  } else {
+    // TODO: 네비에 프로파일 사진과 메뉴 설정
+    document.getElementById('header-profile').innerHTML = mustache.render(template['header-profile'])
+    document.getElementById('header-signout').addEventListener('click', function (e) {
+      ProfileManager.logout(function () {
+        window.location.reload()
+      })
+    })
+  }
+}
+SiteHeader.prototype.showLogin = function (isRegister) {
+  var self = this
+
+  document.getElementById('content-body').innerHTML = mustache.render(template['login'])
+
+  // 먼저 로그인 화면에서 go-register를 누르면 fade out 되도록 한다
+  var loginformElement = document.getElementById('login-form')
+
+  var registerTxt = document.getElementById('go-register')
+  registerTxt.addEventListener('click', function () {
+    util.fadeOutIn(loginformElement, registerformElement, 500)
+  })
+
+  loginformElement.addEventListener('submit', function (e) {
+    e.preventDefault()
+    ProfileManager.submitLogin(document.loginForm.identifier.value, document.loginForm.password.value, function (err, msg) {
+      // 로그인 실패하면 이 callback이 실행된다
+      if (err) {
+        self.loginCheckCallback(false)
+      }
+      self.loginCheckCallback(true)
+    })
+    return false // stop propagating
+  })
+
+  var registerformElement = document.getElementById('register-form')
+  var loginTxt = document.getElementById('go-login')
+  loginTxt.addEventListener('click', function () {
+    util.fadeOutIn(registerformElement, loginformElement, 500)
+  })
+
+  registerformElement.addEventListener('submit', function (e) {
+    e.preventDefault()
+    ProfileManager.submitRegister(document.registerForm.username.value, document.registerForm.identifier.value, document.registerForm.password.value, function (err, msg) {
+      if (err) { throw err }
+      console.log(msg)
+      // util.fadeOutIn(registerformElement, loginformElement, 500)
+    })
+    return false // stop propagating
+  })
+
+  if (isRegister) util.fadeOutIn(loginformElement, registerformElement, 0)
+}
+
+module.exports = SiteHeader

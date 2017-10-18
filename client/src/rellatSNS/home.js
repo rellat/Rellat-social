@@ -7,8 +7,7 @@ var postButton = document.getElementById('postFeedBtn')
 var textArea = document.querySelector('textarea')
 
 postButton.addEventListener('click', function () {
-
-  feedManager.postFeed(' ', textArea.value, followManager.getFollowings,feedManager.getAllFeed,inithome)
+  feedManager.postFeed(' ', textArea.value, followManager.getFollowings, feedManager.getAllFeed, inithome)
   textArea.value = ''
 })
 
@@ -32,13 +31,12 @@ function initFollowedBtn () {
   }
 }
 
-
-function inithome(body){
-  if(body){
+function inithome (body) {
+  if (body) {
     document.getElementById('feedListTarget').innerHTML = body
-  }else{
+  } else {
     // 처음에 불릴 때 follow목록을 받아서 getAllFeed를 실행한다
-    followManager.getFollowings(feedManager.getAllFeed,inithome)
+    followManager.getFollowings(feedManager.getAllFeed, inithome)
   }
   initFollowBtn()
   initFollowedBtn()

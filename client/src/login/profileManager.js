@@ -12,45 +12,47 @@ function ProfileManager () {
   self.token = null
   self.storeable = storageAvailable('localStorage')
   self.profile = null
-  // look for saved local token
+  self.loginHost = window.location.protocol + '//' + window.location.host // default host setting
+  // self.loginHost = 'http://ide.rellat.com:8888' // default host setting
 }
-
+ProfileManager.prototype.setLoginHost = function (host) {
+  var self = this
+  // var validateAddress = /^(?:(?:(?:http?|https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(host)
+  // if (validateAddress)
+  self.loginHost = host
+  // else throw new Error('host address is not valid')
+}
 ProfileManager.prototype.verifyUser = function (cb) {
   var self = this
   if (self.storeable) {
-    self.token = window.localStorage.getItem('AuthToken')
-    self.profile = JSON.parse(window.localStorage.getItem('UserProfile'))
+    self.getToken()
+    self.getProfile()
 
     if (self.token && self.profile) {
       request({
         method: 'GET',
-        url: 'http://localhost:3000/api/v1/user/profile',
-        headers:
-          {
-            'cache-control': 'no-cache',
-            'content-type': 'application/json',
-            'x-access-token': self.token,
-            'x-key': self.profile.email
-          },
+        url: self.loginHost + '/api/v1/user/profile',
+        headers: {
+          'cache-control': 'no-cache',
+          'content-type': 'application/json',
+          'x-access-token': self.token,
+          'x-key': self.profile.email
+        },
         json: true
       }, function (error, response, body) {
-        // if (error) throw new Error(error)
-        // 에러가 발생하면 로그인 화면을 띄우게 한다
-        if (error) cb(error)
+        if (error) cb(new Error(error))
         else {
-          if(body.status === 'true'){
-            window.localStorage.setItem('UserProfile', JSON.stringify(self.profile))
-            self.goNextPage('/RellatChat')
-            console.log(body)
-          }else{
-            cb(error)
+          if (body.status === 'true') {
+            self.setProfile(body.profile)
+            // 혹시 업데이트 사항이 있을 수 있으므로 profile을 저장 해 둔다
+            cb(null, self.getProfile())
+          } else {
+            cb(new Error(body.message))
           }
-          // 혹시 업데이트 사항이 있을 수 있으므로 profile을 저장 해 둔다
         }
-
       })
     } else {
-      cb(new Error('Not assigned Token or Profile'))
+      cb(new Error('Couldn\'t find Token or Profile'))
     }
   } else {
     cb(new Error('localStorage not available'))
@@ -61,30 +63,22 @@ ProfileManager.prototype.submitLogin = function (email, password, callback) {
   var self = this
   request({
     method: 'POST',
-    url: 'http://localhost:3000/user/login',
+    url: self.loginHost + '/user/login',
     headers:
-      {
-        'cache-control': 'no-cache',
-        'content-type': 'application/json'
-      },
+    {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json'
+    },
     body: {email: email, password: password},
     json: true
   }, function (error, response, body) {
-    if (!error && body.status === 'true') {
-      self.token = body.token
-      self.profile = body.profile
+    console.log(JSON.stringify(body))
 
-      // {
-      //   'email': body.email,
-      //   'picture': body.picture,
-      //   'userId': body.userId,
-      //   'username': body.username
-      // }
-      window.localStorage.setItem('AuthToken', self.token)
-      window.localStorage.setItem('UserProfile', JSON.stringify(self.profile))
-      self.goNextPage('/RellatChat')
+    if (!error && body.status === 'true') {
+      self.setToken(body.token)
+      self.setProfile(body.profile)
     } else {
-      error = error || new Error(body.message)
+      error = error || (body ? body.message || 'someting went wrong' : 'someting went wrong')
       callback(error, body)
     }
   })
@@ -97,24 +91,26 @@ ProfileManager.prototype.logout = function (callback) {
   window.localStorage.removeItem('AuthToken')
   window.localStorage.removeItem('UserProfile')
   if (callback) callback()
+  else window.location.href = self.loginHost
 }
 
 ProfileManager.prototype.submitRegister = function (name, email, password, callback) {
+  var self = this
   request({
     method: 'POST',
-    url: 'http://localhost:3000/user/registerUser',
+    url: self.loginHost + '/user/registerUser',
     headers:
-      {
-        'cache-control': 'no-cache',
-        'content-type': 'application/json'
-      },
+    {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json'
+    },
     body: {email: email, password: password, username: name},
     json: true
   }, function (error, response, body) {
     if (!error && body.status === 'true') {
       callback(null, body)
     } else {
-      error = error || new Error(body.message)
+      error = error || (body ? body.message || 'someting went wrong' : 'someting went wrong')
       callback(error, body)
     }
   })
@@ -123,7 +119,7 @@ ProfileManager.prototype.submitRegister = function (name, email, password, callb
 ProfileManager.prototype.goNextPage = function (path) {
   var self = this
 
-  window.location.href = 'http://localhost:3000' + path
+  window.location.href = self.loginHost + path
 }
 
 ProfileManager.prototype.getToken = function () {
@@ -131,25 +127,23 @@ ProfileManager.prototype.getToken = function () {
   self.token = window.localStorage.getItem('AuthToken')
   return self.token
 }
-
 ProfileManager.prototype.setToken = function (token) {
   var self = this
 
-  window.localStorage.setItem('AuthToken',token)
+  window.localStorage.setItem('AuthToken', token)
   self.token = token
-}
-
-ProfileManager.prototype.setProfile = function (profile) {
-  var self = this
-
-  window.localStorage.setItem('UserProfile', JSON.stringify(profile))
-  self.profile = self.getProfile()
 }
 
 ProfileManager.prototype.getProfile = function () {
   var self = this
   self.profile = JSON.parse(window.localStorage.getItem('UserProfile'))
   return self.profile
+}
+ProfileManager.prototype.setProfile = function (profile) {
+  var self = this
+
+  window.localStorage.setItem('UserProfile', JSON.stringify(profile))
+  self.profile = self.getProfile()
 }
 
 function storageAvailable (type) {
@@ -176,5 +170,5 @@ function storageAvailable (type) {
 }
 
 var prm = new ProfileManager()
-window.ProfileManager = prm
+window.ProfileManager = prm // expose to global
 module.exports = prm

@@ -32,7 +32,6 @@ module.exports.postFeed = function (req, res) {
  */
 
 module.exports.getFeeds = function (req, res) {
-
   if (!req.body.following) {
     Feed.find({})
       .sort({date: -1})
@@ -60,11 +59,9 @@ module.exports.getFeeds = function (req, res) {
         }
       })
   }
-
 }
 
 module.exports.getAllFeeds = function (req, res) {
-
   if (!req.body.followList) {
     Feed.find({})
       .sort({date: -1})
@@ -99,13 +96,11 @@ module.exports.getAllFeeds = function (req, res) {
             if (!allFeeds[i].followed) {
               allFeeds[i].follow = 'follow'
             }
-
           }
           var data = {
             'feeds': allFeeds
           }
           res.render('feed', data)
-
         }
       })
   }

@@ -1,14 +1,19 @@
-//로그인 하지 않고도 접속자가 접근 할 수 있는 것들이다
-var path = window.location.href.toString().replace('http://localhost:3000', '')
-
+/**
+ * client Routing
+ */
+var path = window.location.pathname
+var tp = path.split('/')
+if (tp[tp.length - 1] === '') tp.pop()
+path = tp.join('/')
 switch (path) {
+  case '':
   case '/':
     require('./login/loginHome')
     break
-  case '/RellatSNS/':
+  case '/RellatSNS':
     require('./rellatSNS/snsHome')
     break
-  case '/RellatChat/':
+  case '/RellatChat':
     require('./rellatChat/chatHome')
     break
 }

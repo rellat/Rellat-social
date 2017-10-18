@@ -5,13 +5,12 @@ var logger = require('morgan')
 var bodyParser = require('body-parser')
 var cors = require('cors') // for cross browser ajax allow setting
 var app = express()
-var mustacheExpress = require('mustache-express')
 
+var mustacheExpress = require('mustache-express')
 // Register '.mustache' extension with The Mustache Express
 app.engine('mustache', mustacheExpress())
-
 app.set('view engine', 'mustache')
-app.set('views', __dirname + '/views')
+app.set('views', path.join(__dirname, '/views'))
 
 // express setting
 app.use(favicon(path.join(__dirname, '../client/public', 'favicon.ico')))
@@ -27,10 +26,7 @@ app.use(cors()) // 브라우져에서 ajax 호출 허용. blank일때 어떤 도
 // Any URL's that do not follow the below pattern should be avoided unless you
 // are sure that authentication is not needed
 app.all('/api/v1/*', [require('./middlewares/validateRequest')])
-app.use('/RellatSNS',express.static(path.join(__dirname, '../client/public')))
-app.use('/rellatChat',express.static(path.join(__dirname, '../client/public')))
 app.use('/', require('./routes'))
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
 var bcrypt = require('bcrypt-nodejs')
 var DEFAULT_USER_PICTURE = '/img/user.jpg'
 var SALT_WORK_FACTOR = 10
@@ -11,7 +11,7 @@ var UserSchema = new Schema({
   password: {type: String, default: null},
   socialId: {type: String, default: null},
   picture: {type: String, default: DEFAULT_USER_PICTURE},
-  userRole: {type: String, default: null},
+  userRole: {type: String, default: 'default'}, // admin, default, developer
   following: [{userEmail: String}],
   followers: [{userEmail: String}]
 })
@@ -48,5 +48,4 @@ UserSchema.methods.validatePassword = function (password, callback) {
   // callback(null, password === this.password)
 }
 
-module.exports = mongoose.model('User', UserSchema);
-
+module.exports = mongoose.model('User', UserSchema)

@@ -1,6 +1,7 @@
-
 var dataManager = null
 var request = require('request')
+
+var HOST_URL = window.location.protocol + '//' + window.location.host
 
 module.exports.follow = function (targetId, next, callback) {
   var token = dataManager.getToken()
@@ -11,13 +12,13 @@ module.exports.follow = function (targetId, next, callback) {
 
   request({
     method: 'POST',
-    url: 'http://localhost:3000/api/v1/follow',
+    url: HOST_URL + '/api/v1/follow',
     headers:
-      {
-        'cache-control': 'no-cache',
-        'content-type': 'application/json',
-        'x-access-token': token
-      },
+    {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+      'x-access-token': token
+    },
     body: {
       targetId: targetId
     },
@@ -26,7 +27,6 @@ module.exports.follow = function (targetId, next, callback) {
     console.log(body)
     next(body, callback)
   })
-
 }
 
 module.exports.unfollow = function (targetId, next, callback) {
@@ -38,13 +38,13 @@ module.exports.unfollow = function (targetId, next, callback) {
 
   request({
     method: 'POST',
-    url: 'http://localhost:3000/api/v1/unfollow',
+    url: HOST_URL + '/api/v1/unfollow',
     headers:
-      {
-        'cache-control': 'no-cache',
-        'content-type': 'application/json',
-        'x-access-token': token
-      },
+    {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+      'x-access-token': token
+    },
     body: {
       targetId: targetId
     },
@@ -61,16 +61,15 @@ module.exports.getFollowers = function (next, callback) {
 
   request({
     method: 'GET',
-    url: 'http://localhost:3000/api/v1/followerList',
+    url: HOST_URL + '/api/v1/followerList',
     headers:
-      {
-        'cache-control': 'no-cache',
-        'content-type': 'application/json',
-        'x-access-token': token
-      },
+    {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+      'x-access-token': token
+    },
     json: true
   }, function (error, response, body) {
-
     next(body, callback)
   })
 }
@@ -81,17 +80,15 @@ module.exports.getFollowings = function (next, callback) {
 
   request({
     method: 'GET',
-    url: 'http://localhost:3000/api/v1/followingList',
+    url: HOST_URL + '/api/v1/followingList',
     headers:
-      {
-        'cache-control': 'no-cache',
-        'content-type': 'application/json',
-        'x-access-token': token
-      },
+    {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+      'x-access-token': token
+    },
     json: true
   }, function (error, response, body) {
-
     next(body, callback)
   })
-
 }

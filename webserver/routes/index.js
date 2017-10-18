@@ -1,6 +1,19 @@
 var express = require('express')
 var router = express.Router()
 
+/**
+ * static page response
+ */
+function indexPage (req, res) {
+  res.render('index')
+}
+router.get('/', indexPage)
+router.get('/RellatSNS', indexPage)
+router.get('/rellatChat', indexPage)
+
+/**
+ * User API
+ */
 var userManager = require('./userManager')
 // login
 router.post('/user/registerUser', userManager.registerUser)
@@ -21,8 +34,7 @@ var feedManager = require('./feedManager')
 router.post('/api/v1/feed/AllFeeds', feedManager.getAllFeeds)
 router.post('/api/v1/feed/postFeed', feedManager.postFeed)
 
-router.get('/api/v1/usersAndFollowings',userManager.getAllUserList, followManager.getFollowerList)
-
+router.get('/api/v1/usersAndFollowings', userManager.getAllUserList, followManager.getFollowerList)
 
 /*
  * Routes for Chat room

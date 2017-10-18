@@ -1,19 +1,18 @@
 var ChatApp = require('./chat')
-var profileManager = require('./../login/profilemanager')
+var SiteHeader = require('../login/siteHeader')
+var loginHeader = new SiteHeader({ loginCheck: pageInit })
+var template = require('../templates')
 var mustache = require('mustache')
-var templates = require('./../templates')
 
-console.log("??????????")
-document.body.innerHTML = mustache.render(templates['chat'])
+function pageInit (isLogedIn) {
+  if (isLogedIn) {
+    document.getElementById('content-body').innerHTML = mustache.render(template['chat'])
 
-var roomSectionElement = document.getElementById('room-section')
-var chatSectionElement = document.getElementById('chat-section')
+    var roomSectionElement = document.getElementById('room-section')
+    var chatSectionElement = document.getElementById('chat-section')
 
-window.chatapp = new ChatApp(roomSectionElement, chatSectionElement)
-
-document.getElementById('logout-btn').addEventListener('click', function (e) {
-  profileManager.logout(function () {
-    profileManager.goNextPage('/')
-  })
-  return false
-})
+    window.chatapp = new ChatApp(roomSectionElement, chatSectionElement)
+  } else {
+    window.location.href = '/'
+  }
+}

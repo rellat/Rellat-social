@@ -1,4 +1,4 @@
-var ProfileManager = require('./../login/profilemanager')
+var ProfileManager = require('../login/profileManager')
 var io = require('socket.io-client')
 var request = require('request')
 var mustache = require('mustache')
@@ -10,18 +10,19 @@ function ChatApp (roomdom, chatdom) {
   self.roomDom = roomdom
   self.chatDom = chatdom
   self.roomId = null
+  self.loginHost = window.location.protocol + '//' + window.location.host // default host setting
 
   // set room list
   request({
     method: 'GET',
-    url: 'http://localhost:3000/api/v1/chat/rooms',
+    url: self.loginHost + '/api/v1/chat/rooms',
     headers:
-      {
-        'cache-control': 'no-cache',
-        'content-type': 'application/json',
-        'x-key': ProfileManager.getProfile().email,
-        'x-access-token': ProfileManager.getToken()
-      },
+    {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+      'x-key': ProfileManager.getProfile().email,
+      'x-access-token': ProfileManager.getToken()
+    },
     json: true
   }, function (error, response, body) {
     // console.log('get rooms' + JSON.stringify(body))
