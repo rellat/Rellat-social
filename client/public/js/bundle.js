@@ -274,7 +274,10 @@ SiteHeader.prototype.setNavProfile = function (profile) {
     document.getElementById('header-signup').addEventListener('click', function (e) { self.showLogin(true) })
   } else {
     // TODO: 네비에 프로파일 사진과 메뉴 설정
-    document.getElementById('header-profile').innerHTML = mustache.render(template['header-profile'])
+    document.getElementById('header-profile').innerHTML = mustache.render(template['header-profile'], {
+      profileName: ProfileManager.profile.username,
+      profilePicture: ProfileManager.profile.picture
+    })
     document.getElementById('header-signout').addEventListener('click', function (e) {
       ProfileManager.logout(function () {
         window.location.reload()
@@ -716,7 +719,8 @@ templates['login'] = '<div class="login-page">' +
   '    </div>' +
   '</div>'
 
-templates['header-profile'] = '<a id="header-signout" href="javascript:void(0)">Sign out</a>'
+templates['header-profile'] = '<a id="header-signout" href="javascript:void(0)">Sign out</a>' +
+'<div id="profile-name">{{profileName}}</div><div id="profile-picture"><img src="{{profilePicture}}" width="32px"></div>'
 
 templates['snsHome'] =
   '<textarea rows="4" cols="50" placeholder="input your story"></textarea>' +

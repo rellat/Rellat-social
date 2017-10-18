@@ -61,7 +61,10 @@ SiteHeader.prototype.setNavProfile = function (profile) {
     document.getElementById('header-signup').addEventListener('click', function (e) { self.showLogin(true) })
   } else {
     // TODO: 네비에 프로파일 사진과 메뉴 설정
-    document.getElementById('header-profile').innerHTML = mustache.render(template['header-profile'])
+    document.getElementById('header-profile').innerHTML = mustache.render(template['header-profile'], {
+      profileName: ProfileManager.profile.username,
+      profilePicture: ProfileManager.profile.picture
+    })
     document.getElementById('header-signout').addEventListener('click', function (e) {
       ProfileManager.logout(function () {
         window.location.reload()

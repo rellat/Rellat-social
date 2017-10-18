@@ -45,7 +45,8 @@ templates['login'] = '<div class="login-page">' +
   '    </div>' +
   '</div>'
 
-templates['header-profile'] = '<a id="header-signout" href="javascript:void(0)">Sign out</a>'
+templates['header-profile'] = '<a id="header-signout" href="javascript:void(0)">Sign out</a>' +
+'<div id="profile-name">{{profileName}}</div><div id="profile-picture"><img src="{{profilePicture}}" width="32px"></div>'
 
 templates['snsHome'] =
   '<textarea rows="4" cols="50" placeholder="input your story"></textarea>' +

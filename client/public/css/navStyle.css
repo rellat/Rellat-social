@@ -481,3 +481,25 @@ li.dropdown .dropdown-menu li a {
 li.dropdown.open .dropdown-menu {
   display: block;
 }
+
+
+/**
+ *
+**/
+#profile-name {
+  display: inline-block;
+  padding: 18px 0 0 0;
+  line-height: 0;
+}
+#profile-picture {
+  display: inline-block;
+  overflow: hidden;
+  float: right;
+  padding: 14px 0px 14px 15px;
+  line-height: 0;
+}
+#header-signout {
+  display: inline-block;
+  padding: 16px 20px 0 0;
+  line-height: 0;
+}
