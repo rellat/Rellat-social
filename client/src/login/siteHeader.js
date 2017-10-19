@@ -91,8 +91,10 @@ SiteHeader.prototype.showLogin = function (isRegister) {
       // 로그인 실패하면 이 callback이 실행된다
       if (err) {
         self.loginCheckCallback(false)
+      } else {
+        // self.loginCheckCallback(true)
+        window.location.href = './'
       }
-      self.loginCheckCallback(true)
     })
     return false // stop propagating
   })
@@ -109,6 +111,7 @@ SiteHeader.prototype.showLogin = function (isRegister) {
       if (err) { throw err }
       console.log(msg)
       // util.fadeOutIn(registerformElement, loginformElement, 500)
+      window.location.href = './'
     })
     return false // stop propagating
   })
