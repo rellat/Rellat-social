@@ -4,17 +4,12 @@ var debug = require('debug')('Rellat:server')
 var app = require('./webserver/app')
 var http = require('http')
 
-// Get port from environment and store in Express.
-var port = normalizePort(process.env.PORT || '3000')
+var serverconfig
+try {
+  serverconfig = require('./config')
+} catch (e) { serverconfig = { hostname: '127.0.0.1', port: process.env.PORT || 3000 } }
+var port = serverconfig.port
 app.set('port', port)
-
-// Normalize a port into a number, string, or false.
-function normalizePort (val) {
-  var port = parseInt(val, 10)
-  if (isNaN(port)) return val // named pipe
-  if (port >= 0) return port // port number
-  return false
-}
 
 // Create HTTP server.
 var server = http.createServer(app)
