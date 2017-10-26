@@ -1,32 +1,5 @@
 var templates = {}
 
-templates['nav'] = '<section>' +
-  '<a id="logo" target="_blank">' +
-  '   <img src="img/rellat_logo.png"></a>' +
-  // '<label for="toggle-1" class="nav-toggle-menu">' +
-  // '<ul>' +
-  // '  <li></li>' +
-  // '  <li></li>' +
-  // '  <li></li>' +
-  // '</ul>' +
-  // '</label>' +
-  // '<input type="checkbox" id="toggle-1">' +
-  // '<nav>' +
-  // '  <ul>' +
-  // '    <li><a href="#logo"><i class="fa fa-home"></i>Home </a></li>' +
-  // '    <li><a href="#about"><i class="fa fa-user"></i>About </a></li>' +
-  // '    <li><a href="#portfolio"><i class="fa fa-thumb-tack"></i>Portfolio </a></li>' +
-  // '    <li><a href="#services"><i class="fa fa-gears"></i>Services </a></li>' +
-  // '    <li><a href="#gallery"><i class="fa fa-picture-o"></i>Gallery </a></li>' +
-  // '    <li><a href="#contact"><i class="fa fa-phone"></i>Contact </a></li>' +
-  // '  </ul>' +
-  // '</nav>' +
-  '<nav>' +
-  '<a href="#contact">Sign in</a> or <a href="#contact">Sign up</a>' +
-  '</nav>'
-
-templates['intro'] = 'Hello, World!!'
-
 templates['login'] = '<div class="login-page">' +
   '    <div class="form">' +
   '        <form name="loginForm" id="login-form">' +
@@ -47,6 +20,9 @@ templates['login'] = '<div class="login-page">' +
 
 templates['header-profile'] = '<a id="header-signout" href="javascript:void(0)">Sign out</a>' +
 '<div id="profile-name">{{profileName}}</div><div id="profile-picture"><img src="{{profilePicture}}" width="32px"></div>'
+
+templates['nav-profile'] = '<a class="nav-profile-icon" href="javascript:void(0)"><img alt="Profile picture" src="{{profilePicture}}" width="38px"></a>' +
+'<a class="nav-profile-text" href= "javascript:void(0)"> {{profileName}}</a>'
 
 templates['snsHome'] =
   '<textarea rows="4" cols="50" placeholder="input your story"></textarea>' +
@@ -163,19 +139,19 @@ templates['chat'] =
   '    <div id="chat-history" class="chat-history">' +
   '      <ul>' +
   '      </ul>' +
+  '      <div class="chat-message clearfix">' +
+  '        <textarea id="chat-message-text" name="message" placeholder ="Type your message" rows="3"></textarea>' +
+  '        <button id="chat-message-button" type="submit">Send</button>' +
+  '      </div> <!-- end chat-message -->' +
   '    </div> <!-- end chat-history -->' +
-  '    <div class="chat-message clearfix">' +
-  '      <textarea id="chat-message-text" name="message" placeholder ="Type your message" rows="3"></textarea>' +
-  '      <button id="chat-message-button" type="submit">Send</button>' +
-  '    </div> <!-- end chat-message -->' +
+  '    <div id="users-list" class="users-list">' +
+  '      <ul class="list">' +
+  '      </ul>' +
+  '    </div>' +
   '  </div> <!-- end chat -->' +
-  '  <div class="controls">' +
-  '      <a href="#" id="logout-btn" class="logout-btn">Logout</a>' +
-  '  </div>' +
-  '  <div id="users-list" class="users-list">' +
-  '    <ul class="list">' +
-  '    </ul>' +
-  '  </div>' +
+  // '  <div class="controls">' +
+  // '      <a href="#" id="logout-btn" class="logout-btn">Logout</a>' +
+  // '  </div>' +
   '</div> <!-- end container -->'
 
 templates['chat-users'] =
@@ -184,7 +160,7 @@ templates['chat-users'] =
   '      <img src="{{picture}}" alt="{{username}}" />' +
   '      <div class="about">' +
   '      <div class="name">{{username}}</div>' +
-  '      <div class="status"><i class="fa fa-circle online"></i> online</div>' +
+  '      <div class="status"><i class="fa fa-circle {{online}}"></i> {{online}}</div>' +
   '      </div></li>' +
   '{{/users}}'
 

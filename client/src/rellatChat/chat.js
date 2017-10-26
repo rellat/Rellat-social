@@ -165,13 +165,13 @@ var helpers = {
     if (users.constructor !== Array) {
       users = [users]
     }
-    console.log('user ' + JSON.stringify(users))
+    // console.log('user ' + JSON.stringify(users))
 
     var html = mustache.render(templates['chat-users'], {users: users})
 
     if (html === '') { return }
 
-    if (clear !== null && clear === true) {
+    if (clear) {
       var el = document.getElementById('users-list').getElementsByTagName('ul')[0]
       while (el.firstChild) { el.removeChild(el.firstChild) }
       el.innerHTML = html

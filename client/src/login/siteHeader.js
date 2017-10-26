@@ -65,6 +65,10 @@ SiteHeader.prototype.setNavProfile = function (profile) {
       profileName: ProfileManager.profile.username,
       profilePicture: ProfileManager.profile.picture
     })
+    document.getElementById('nav-profile').innerHTML = mustache.render(template['nav-profile'], {
+      profileName: ProfileManager.profile.username,
+      profilePicture: ProfileManager.profile.picture
+    })
     document.getElementById('header-signout').addEventListener('click', function (e) {
       ProfileManager.logout(function () {
         window.location.reload()

@@ -4,17 +4,22 @@
     margin: 0;
     padding: 0;
     font-size: 12px;
-    background: #444753;
 }
 .room-section {
     width: 300px;
-    height: 100%;
-    display: inline-block;
+    height: calc(100% - 64px);
+    /* display: inline-block; */
+    position: absolute;
+    left: 0;
+    overflow: hidden;
 }
 .chat-section {
-    height: 100%;
-    display: inline-block;
-    width: calc(100vw - 315px);
+    height: calc(100% - 64px);
+    width: calc(100vw - 300px);
+    /* display: inline-block; */
+    position: absolute;
+    right: 0;
+    overflow: hidden;
 }
 .container.hidden {
     display: none;
@@ -23,8 +28,15 @@
     height: calc(100vh - 226px);
 }
 .chat .chat-history {
-    height: calc(100vh - 298px);
-    padding: 10px 30px 20px;
+    width: calc(100% - 270px);
+    height: calc(100% - 101px);
+    padding: 10px 10px;
+    position: absolute;
+    left: 0;
+    background-color: #fff;
+}
+.chat .chat-history ul {
+    height: calc(100% - 60px);
     overflow-y: auto;
     border-bottom: 1px solid #ddd;
 }
@@ -38,12 +50,14 @@
 }
 .chat {
     background: #ffffff;
-    width: calc(100vw - (315px + 270px));
+    width: 100%;
 }
 .users-list {
     width: 270px;
     height: calc(100vh - 100px);
-    float: left;
+    position: absolute;
+    right: 0;
+    background: #444753;
 }
 .users-list .search {
     padding: 20px;
@@ -63,10 +77,14 @@
 }
 .users-list ul {
     padding: 20px;
-    height: 100%;
+    height: calc(100% - 60px);
+    overflow-y: auto;    
 }
 .users-list ul li {
     padding-bottom: 20px;
+}
+.users-list .name {
+  color: white;
 }
 .users-list img {
     float: left;
@@ -143,17 +161,31 @@
 .chat .chat-history .my-message {
     background: #86BB71;
 }
-.chat .chat-message, .room .room-create {
-    padding: 10px;
+.chat .chat-message {
+    padding: 10px 0 0;
+
 }
+.room .room-create {
+    padding: 10px;    
+}
+
 .chat .chat-message textarea, .room .room-create input {
-    width: calc(100% - 30px);
     border: none;
     padding: 10px 15px;
     font: 14px/22px "Roboto", Arial, sans-serif;
-    margin-bottom: 5px;
-    resize: none;
+    resize: none;    
 }
+
+.chat .chat-message textarea {
+    width: calc(100% - 66px - 10px);
+    margin-right: 10px;
+    height: 50px;
+    padding-bottom: 0
+}
+.room .room-create input {
+    width: calc(100% - 90px);
+}
+
 .online, .offline, .me {
     margin-right: 3px;
     font-size: 10px;
@@ -222,12 +254,6 @@ ul {
 }
 .room .room-list a {
     text-decoration: none;
-}
-.users-list .name {
-    color: white;
-}
-.users-list ul {
-    overflow-y: auto;
 }
 .loginBtn {
     width: 80%;

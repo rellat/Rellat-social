@@ -8,6 +8,7 @@ var RoomSchema = new Mongoose.Schema({
   title: { type: String, required: true },
   ownerId: { type: String, default: null },
   permission: { type: String, default: null },
+  subscription: { type: [{ userId: String }] },
   connections: { type: [{ userId: String, socketId: String }] }
 })
 

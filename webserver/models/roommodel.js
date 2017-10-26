@@ -31,45 +31,55 @@ var addUser = function (room, socket, callback) {
   var userId = socket.client.profile.userId
   // console.log('get user id: ' + userId);
   // Push a new connection object(i.e. {userId + socketId})
-  var conn = { userId: userId, socketId: socket.id }
-  room.connections.push(conn)
+  room.connections.push({ userId: userId, socketId: socket.id })
+
+  var isexist = room.subscription.findIndex(function (element) {
+    return element.userId === userId
+  })
+  if (isexist === -1) room.subscription.push({ userId: userId })
+
   room.save(callback)
 }
 
 /**
 * Get all users in a room
-*
 */
-var getUsers = function (room, socket, callback) {
+var getUsers = function (room, callback) {
   var users = []
-  var vis = {}
-  var count = 0
-  var userId = socket.client.profile.userId
 
   // Loop on room's connections, Then:
-  room.connections.forEach(function (conn) {
-    // 1. Count the number of connections of the current user(using one or more sockets) to the passed room.
-    if (conn.userId === userId) {
-      count++
+  room.subscription.forEach(function (subs) {
+    var tuser = {
+      userId: subs.userId,
+      online: 'offline',
+      picture: '/img/user.jpg',
+      username: 'unknown'
+    }
+    var isexist = room.connections.findIndex(function (conn) {
+      return conn.userId === subs.userId
+    })
+    if (isexist !== -1) { // when subscripted user is online.
+      tuser.online = 'online'
     }
 
-    // 2. Create an array(i.e. users) contains unique users' ids
-    if (!vis[conn.userId]) {
-      users.push(conn.userId)
-    }
-    vis[conn.userId] = true
+    users.push(tuser)
   })
 
-  console.log('user ' + JSON.stringify(users))
   // Loop on each user id, Then:
   // Get the user object by id, and assign it to users array.
   // So, users array will hold users' objects instead of ids.
-  users.forEach(function (userId, i) {
-    User.findOne({userId: userId}, function (err, user) {
+  users.forEach(function (tuser, i) {
+    User.findOne({userId: tuser.userId}, function (err, user) {
       if (err) { return callback(err) }
-      users[i] = user
+
+      tuser.picture = user.picture
+      tuser.username = user.username
       if (i + 1 === users.length) {
-        return callback(null, users, count)
+        // because findOne is async, so return should place here.
+        // console.log('user ' + JSON.stringify(users))
+        setTimeout(function () { // sometime last query finished earlier than other one.
+          callback(null, users)
+        }, 0)
       }
     })
   })
@@ -79,42 +89,37 @@ var getUsers = function (room, socket, callback) {
 * Remove a user along with the corresponding socket from a room
 *
 */
-var removeUser = function (socket, callback) {
+var removeUser = function (socket, clients, callback) {
   // Get current user's id
-  console.log(socket.client.profile)
+  // console.log(socket.client.profile)
+  // console.log('current users' + JSON.stringify())
   var userId = socket.client.profile.userId
 
-  find(function (err, rooms) {
+  find({}, function (err, rooms) {
     if (err) { return callback(err) }
 
     // Loop on each room, Then:
-    rooms.every(function (room) {
+    rooms.forEach(function (room, ri) {
       var pass = true
-      var count = 0
-      var target = 0
-
       // For every room,
       // 1. Count the number of connections of the current user(using one or more sockets).
       room.connections.forEach(function (conn, i) {
-        if (conn.userId === userId) {
-          count++
-        }
         if (conn.socketId === socket.id) {
           pass = false
-          target = i
+          room.connections.id(room.connections[i]._id).remove()
+        } else if (!clients[conn.socketId]) { // delete connection if socket doesn't exist
+          pass = false
+          room.connections.id(room.connections[i]._id).remove()
         }
       })
 
       // 2. Check if the current room has the disconnected socket,
       // If so, then, remove the current connection object, and terminate the loop.
       if (!pass) {
-        room.connections.id(room.connections[target]._id).remove()
         room.save(function (err) {
-          callback(err, room, userId, count)
+          callback(err, room, userId)
         })
       }
-
-      return pass
     })
   })
 }

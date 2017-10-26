@@ -8,8 +8,8 @@ function indexPage (req, res) {
   res.render('index')
 }
 router.get('/', indexPage)
-router.get('/RellatSNS', indexPage)
-router.get('/rellatChat', indexPage)
+router.get('/feed', indexPage)
+router.get('/chat', indexPage)
 
 /**
  * User API
@@ -19,6 +19,10 @@ var userManager = require('./userManager')
 router.post('/user/registerUser', userManager.registerUser)
 router.post('/user/login', userManager.login)
 router.get('/api/v1/user/profile', userManager.getOneUserData)
+
+// login with other service
+// router.post('/user/fblogin', userManager.fblogin)
+
 // get user data
 router.get('/api/v1/user', userManager.getOneUserData)
 router.put('/api/v1/userUpdate', userManager.updateUser)

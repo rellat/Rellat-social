@@ -16,19 +16,6 @@ module.exports = function (server) {
     timeout: 5000
   })
 
-  // io.on('connection', function (socket) {
-  //   socket.on('join', function (message) {
-  //   })
-  //
-  //   socket.on('chat message', function (msg) {
-  //     io.emit('chat message', msg)
-  //   })
-  //
-  //   socket.on('disconnect', function () {
-  //     console.log('Client has disconnected: ' + socket.id)
-  //   })
-  // })
-
   // Rooms namespace
   io.on('connection', function (socket) {
     // Create a new room
@@ -66,16 +53,11 @@ module.exports = function (server) {
             // Join the room channel
             socket.join(newRoom._id)
 
-            Room.getUsers(newRoom, socket, function (err, users, countUserInRoom) {
+            Room.getUsers(newRoom, function (err, users) {
               if (err) throw err
               // Return list of all user connected to the room to the current user
               socket.emit('updateUsersList', users, true)
-
-              // Return the current user to other connecting sockets in the room
-              // ONLY if the user wasn't connected already to the current room
-              if (countUserInRoom >= 1) {
-                socket.broadcast.to(newRoom.id).emit('updateUsersList', users[users.length - 1])
-              }
+              socket.broadcast.to(room.id).emit('updateUsersList', users, true)
             })
           })
         }
@@ -85,15 +67,17 @@ module.exports = function (server) {
     function leaveRoom () {
       // Find the room to which the socket is connected to,
       // and remove the current user + socket from this room
-      Room.removeUser(socket, function (err, room, userId, countUserInRoom) {
+
+      Room.removeUser(socket, io.sockets.connected, function (err, room, userId) {
         if (err) throw err
         // Leave the room channel
         socket.leave(room.id)
-        // Return the user id ONLY if the user was connected to the current room using one socket
-        // The user id will be then used to remove the user from users list on chatroom page
-        if (countUserInRoom === 1) {
-          socket.broadcast.to(room.id).emit('removeUser', userId)
-        }
+        // socket.broadcast.to(room.id).emit('removeUser', userId)
+        Room.getUsers(room, function (err, users) {
+          if (err) throw err
+          // Return list of all user connected to the room to the current user
+          socket.broadcast.to(room.id).emit('updateUsersList', users, true)
+        })
       })
     }
 
@@ -106,7 +90,14 @@ module.exports = function (server) {
       // No need to emit 'addMessage' to the current socket
       // As the new message will be added manually in 'main.js' file
       // socket.emit('addMessage', message);
+      console.log('message ' + JSON.stringify(message))
       socket.broadcast.to(roomId).emit('addMessage', message)
     })
   })
 }
+
+/**
+ * Subscription모드로 바꾸기
+ * 소켓 연결이 끊어져도 대화내용을 저장
+ * 사용자가 '나가기'를 실행하기 전에는 소켓 연결이 끊겨도 사용자가 채팅룸에 오프라인으로 남아있도록 만들기
+ */
