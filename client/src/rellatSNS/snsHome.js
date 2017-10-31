@@ -8,7 +8,7 @@ var feedManager = require('./feedManager')
 function pageInit (isLogedIn) {
   if (isLogedIn) {
     document.getElementById('content-body').innerHTML = mustache.render(template['snsHome'])
-
+    /*
     var postButton = document.getElementById('postFeedBtn')
     var textArea = document.querySelector('textarea')
 
@@ -20,6 +20,7 @@ function pageInit (isLogedIn) {
 
       textArea.value = ''
     })
+    */
   } else {
     window.location.href = '/'
   }

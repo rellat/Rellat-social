@@ -19,16 +19,93 @@ templates['login'] = '<div class="login-page">' +
   '</div>'
 
 templates['header-profile'] = '<a id="header-signout" href="javascript:void(0)">Sign out</a>' +
-'<div id="profile-name">{{profileName}}</div><div id="profile-picture"><img src="{{profilePicture}}" width="32px"></div>'
+  '<div id="profile-name">{{profileName}}</div><div id="profile-picture"><img src="{{profilePicture}}" width="32px"></div>'
 
 templates['nav-profile'] = '<a class="nav-profile-icon" href="javascript:void(0)"><img alt="Profile picture" src="{{profilePicture}}" width="38px"></a>' +
-'<a class="nav-profile-text" href= "javascript:void(0)"> {{profileName}}</a>'
+  '<a class="nav-profile-text" href= "javascript:void(0)"> {{profileName}}</a>'
 
 templates['snsHome'] =
-  '<textarea rows="4" cols="50" placeholder="input your story"></textarea>' +
-  '<button id=\'postFeedBtn\'>POST</button>' +
-  '<main id="feedList">' +
-  '</main>'
+  '<div id = "sns">' +
+  '<div class="main-menu">' +
+  '<ul>' +
+  '    <li>' +
+  '        <a href="#">' +
+  '            <i class="fa fa-home fa-2x"></i>' +
+  '            <span class="div-text">Profile</span>' +
+  '        </a>' +
+  '    </li>' +
+  '    <li class="has-subnav">' +
+  '        <a href="#">' +
+  '            <i class="fa fa-laptop"></i>' +
+  '            <span class="div-text">News Feed</span>' +
+  '        </a>' +
+  '    </li>' +
+  '        <li class="has-subnav">' +
+  '        <a href="#">' +
+  '            <i class="fa fa-list"></i>' +
+  '            <span class="div-text">Chat</span>' +
+  '         </a>' +
+  '        </li>' +
+  '    <li class="has-subnav">' +
+  '        <a href="#">' +
+  '            <i class="fa fa-folder-open"></i>' +
+  '            <span class="div-text">Projects</span>' +
+  '        </a>' +
+  '    </li>' +
+  '    <li>' +
+  '        <a href="#">' +
+  '            <i class="fa fa-bar-chart-o"></i>' +
+  '            <span class="div-text">Games</span>' +
+  '        </a>' +
+  '    </li>' +
+  '    <li>' +
+  '        <a href="#">' +
+  '            <i class="fa fa-font"></i>' +
+  '            <span class="div-text">Typography and Icons</span>' +
+  '        </a>' +
+  '    </li>' +
+  '    <li>' +
+  '        <a href="#">' +
+  '            <i class="fa fa-table"></i>' +
+  '            <span class="div-text">Tables</span>' +
+  '        </a>' +
+  '    </li>' +
+  '    <li>' +
+  '        <a href="#">' +
+  '            <i class="fa fa-map-marker"></i>' +
+  '            <span class="div-text">Maps</span>' +
+  '        </a>' +
+  '    </li>' +
+  '    <li>' +
+  '        <a href="#">' +
+  '            <i class="fa fa-info"></i>' +
+  '            <span class="div-text">Documentation</span>' +
+  '        </a>' +
+  '    </li>' +
+  '    </ul>' +
+  '<ul class="logout">' +
+  '    <li>' +
+  '        <a href="#">' +
+  '            <i class="fa fa-power-off"></i>' +
+  '            <span class="div-text">Logout</span>' +
+  '        </a>' +
+  '    </li>' +
+  '</ul>' +
+  '</div>' +
+  '<div class="main-content">' +
+  '    <div class="tweetbox-container">' +
+  '       <form class="tweetbox">' +
+  '        <textarea class="tweetbox-message" placeholder="input your story" rows="4"></textarea>' +
+  '        <div class="tweetbox-row">' +
+  '            <span class="tweetbox-count">140</span>' +
+  '            <button class="tweetbox-button" type="submit" disabled="disabled">Post</button>' +
+  '        </div>' +
+  '       </form>' +
+  '    </div>' +
+  '    <div class="feeds">' +
+  '    </div>' +
+  '</div>' +
+  '</div>'
 
 templates['feed'] =
   '{{#feeds}}' +
