@@ -31907,6 +31907,7 @@ var mustache = require('mustache')
 function pageInit (isLogedIn) {
   if (isLogedIn) {
     // document.getElementById('content-body').innerHTML = 'You loged in.<br>' + mustache.render(template['intro'])
+    window.location.href = window.location.protocol + '//' + window.location.host + '/feed'
   } else {
     // document.getElementById('content-body').innerHTML = 'not loged in' + mustache.render(template['intro'])
     // window.location.href
@@ -32503,6 +32504,8 @@ FeedManager.prototype.postFeed = function (contentBody, callback) {
 FeedManager.prototype.getAllFeed = function (callback) {
   var self = this
   var token = profileManager.getToken()
+  var profile = profileManager.getProfile()
+  console.log(token)
   // 토큰이 없다면 login 페이지로 넘어가도록 하고 아니라면 token에서 유저의 id와 email, image 경로 이름 등을 디코드 해서 같이 보낸다
   if (!token) {
     return
@@ -32514,7 +32517,8 @@ FeedManager.prototype.getAllFeed = function (callback) {
     {
       'cache-control': 'no-cache',
       'content-type': 'application/json',
-      'x-access-token': profileManager.token
+      'x-access-token': token,
+      'x-key': profile.email
     },
     json: true
   }
@@ -32531,33 +32535,115 @@ module.exports = new FeedManager()
 
 },{"./../login/profileManager":186,"request":338}],191:[function(require,module,exports){
 var SiteHeader = require('../login/siteHeader')
-var loginHeader = new SiteHeader({ loginCheck: pageInit })
+var loginHeader = new SiteHeader({loginCheck: pageInit})
 var template = require('../templates')
 var mustache = require('mustache')
-
 var feedManager = require('./feedManager')
 
 function pageInit (isLogedIn) {
   if (isLogedIn) {
     document.getElementById('content-body').innerHTML = mustache.render(template['snsHome'])
-    /*
-    var postButton = document.getElementById('postFeedBtn')
-    var textArea = document.querySelector('textarea')
+    feedManager.getAllFeed(function (feeds) {
 
-    postButton.addEventListener('click', function () {
-      feedManager.postFeed(textArea.value, function (body) {
-        var parent = document.getElementById('feedList')
-        parent.innerHTML = mustache.render(template['feed'], { 'feeds': body })
-      })
+      var container = document.querySelector('.feeds')
+      container.innerHTML = mustache.render(template['feed'], {'feeds': feeds })
 
-      textArea.value = ''
+      timeTick(feeds)
+      // 시간 갱신을 위해 등록
+      if(window.timeTick) clearInterval(window.timeTick)
+      window.timeTick = setInterval(function(){
+        timeTick(feeds)
+      },3000)
     })
-    */
+    initTweetBoxButtons()
   } else {
     window.location.href = '/'
   }
 }
 
+function initTweetBoxButtons () {
+  var form = document.querySelector('.tweetbox')
+  var input = document.querySelector('.tweetbox-message')
+  var count = document.querySelector('.tweetbox-count')
+  var button = document.querySelector('.tweetbox-button')
+
+  function toggleButton () {
+    if (input.value.length === 0) {
+      button.setAttribute('disabled', 'disabled')
+    } else {
+      button.removeAttribute('disabled')
+    }
+  }
+
+  function updateCount () {
+    count.innerHTML = 140 - input.value.length
+    if (this.value.length > 140) {
+      count.classList.add('tweetbox-count-error')
+    } else {
+      count.classList.remove('tweetbox-count-error')
+    }
+  }
+
+  function postTweet (e) {
+    e.preventDefault()
+    if (input.value.length > 140) return
+
+    var tweetText = input.value
+    feedManager.postFeed(tweetText , function (feeds) {
+
+      var container = document.querySelector('.feeds')
+      container.innerHTML = mustache.render(template['feed'], {'feeds': feeds })
+
+      timeTick(feeds)
+      form.reset()
+      toggleButton()
+
+      // 시간 갱신을 위해 등록
+      if(window.timeTick) clearInterval(window.timeTick)
+      window.timeTick = setInterval(function(){
+        timeTick(feeds)
+      },3000)
+
+    })
+  }
+
+  input.addEventListener('keyup', toggleButton)
+  input.addEventListener('keyup', updateCount)
+  input.addEventListener('keydown', updateCount)
+  form.addEventListener('submit', postTweet)
+}
+
+function applyFeeds(feeds){
+
+}
+
+function getTimeDifference(current, previous) {
+  var msPerMinute = 60 * 1000
+  var msPerHour = msPerMinute * 60
+  var msPerDay = msPerHour * 24
+  var msPerMonth = msPerDay * 30
+  var msPerYear = msPerDay * 365
+  var elapsed = current - previous
+
+  if (elapsed < msPerMinute) return Math.floor(elapsed / 1000) + ' seconds ago'
+  else if (elapsed < msPerHour) return Math.floor(elapsed / msPerMinute) + ' minutes ago'
+  else if (elapsed < msPerDay) return Math.floor(elapsed / msPerHour) + ' hours ago'
+  else if (elapsed < msPerMonth) return Math.floor(elapsed / msPerDay) + ' days ago'
+  else if (elapsed < msPerYear) return 'approximately ' + Math.floor(elapsed / msPerMonth) + ' months ago'
+  else return Math.floor(elapsed / msPerYear) + ' years ago'
+}
+
+function timeTick(feeds){
+  feeds.forEach(function (feed) {
+    var feedtime = document.getElementById('feed-time-' + feed._id)
+    if (!feedtime) return
+    feedtime.innerHTML = getTimeDifference(new Date(), new Date(feed.insertTime))
+  })
+}
+
+function initSidebar () {
+  // 나중에 만들기
+}
 },{"../login/siteHeader":187,"../templates":192,"./feedManager":190,"mustache":328}],192:[function(require,module,exports){
 var templates = {}
 
@@ -32653,6 +32739,7 @@ templates['snsHome'] =
   '    </li>' +
   '</ul>' +
   '</div>' +
+  '<div style="overflow: hidden">' +
   '<div class="main-content">' +
   '    <div class="tweetbox-container">' +
   '       <form class="tweetbox">' +
@@ -32666,52 +32753,28 @@ templates['snsHome'] =
   '    <div class="feeds">' +
   '    </div>' +
   '</div>' +
+  '</div>'+
   '</div>'
 
 templates['feed'] =
   '{{#feeds}}' +
-  '    <article class="card-60 social">' +
-  '        <div class="flex-content">' +
-  '            <header>' +
-  '                <p class="user">' +
-  '                    {{#followed}}' +
-  '                        <a class="button followed" href="#" title="followed" id= {{userEmail}}>' +
-  '                            followed' +
-  '                        </a>' +
-  '                    {{/followed}}' +
-  '                    {{#follow}}' +
-  '                    <a class="button follow" href="#" title="Follow" id= {{userEmail}}>' +
-  '                        Follow' +
-  '                    </a>' +
-  '                    {{/follow}}' +
-  '                    <img class="avatar-32" alt="Avatar" src=./img/user.jpg>' +
-  '                    <strong>' +
-  '                        <a title="Full Name" href="#">' +
-  '                            {{user}}' +
-  '                        </a>' +
-  '                    </strong>' +
-  '                    <!--여기에 date 있었음 -->' +
-  '                </p>' +
-  '            </header>' +
-  '            <h2>' +
-  '                {{contentTitle}}' +
-  '            </h2>' +
-  '            <p>' +
-  '                {{contentBody}}' +
-  '            </p>' +
-  '            <footer>' +
-  '                <p>' +
-  '                    <a class="bt-love" title="Love" href="#">' +
-  '                        Love' +
-  '                    </a>' +
-  '                    <a class="bt-comment" title="Comment" href="#">' +
-  '                        Comment' +
-  '                    </a>' +
-  '                </p>' +
-  '            </footer>' +
+  '<div class="feed">' +
+  '    <img class="feed-user-avatar" src="{{userPicture}}" />' +
+  '    <div class = feed-content>' +
+  '            <div class="feed-item-header">' +
+  '                <div class="feed-user-name">{{userEmail}}</div>' +
+  '                <span class= "feed-nick">{{user}}</span>' +
+  '                <div class="feed-time" id ="feed-time-{{_id}}"></div>' +
+  '            </div>' +
+  '        <p class="feed-body">{{contentBody}}</p>' +
+  '        <div class="feed-actions">' +
+  '            <i class="fa fa-ellipsis-h"></i>' +
+  '            <i class="fa fa-heart"></i>' +
+  '            <i class="fa fa-retweet"></i>' +
+  '            <i class="fa fa-reply"></i>' +
   '        </div>' +
-  '        <!-- end .flex-content-->' +
-  '    </article>' +
+  '    </div>' +
+  '</div>' +
   '{{/feeds}}'
 
 templates['follow'] = '{{#followed}}' +

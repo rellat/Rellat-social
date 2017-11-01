@@ -9,12 +9,15 @@ module.exports.postFeed = function (req, res) {
     user: profile.username,
     userEmail: profile.email,
     userPicture: profile.picture,
-    contentBody: req.body.contentBody
+    contentBody: req.body.contentBody,
+    insertTime: String(new Date())
   })
+
+  console.log(feed)
 
   feed.save().then(function () {
     Feed.find({})
-      .sort({date: -1})
+      .sort({insertTime: -1})
       .exec(function (err, allFeeds) {
         if (err) {
           res.error(err)
@@ -62,46 +65,14 @@ module.exports.getFeeds = function (req, res) {
 }
 
 module.exports.getAllFeeds = function (req, res) {
-  if (!req.body.followList) {
-    Feed.find({})
-      .sort({date: -1})
-      .exec(function (err, allFeeds) {
-        if (err) {
-          res.error(err)
-        } else {
-          res.render('feed', allFeeds)
-        }
-      })
-  } else {
-    var requestedFeeds = []
-
-    for (var i = 0, len = req.body.followList.length; i < len; i++) {
-      requestedFeeds.push({userEmail: req.body.followList[i].userEmail})
-    }
-
-    Feed.find({})
-      .sort({date: -1})
-      .exec(function (err, allFeeds) {
-        if (err) {
-          res.error(err)
-        } else {
-          // 조건에 맞는 feed들만 찾아서 보내준다
-          for (var i = 0, len = allFeeds.length; i < len; i++) {
-            for (var j = 0, len2 = requestedFeeds.length; j < len2; j++) {
-              if (allFeeds[i].userEmail === requestedFeeds[j].userEmail) {
-                allFeeds[i].followed = 'followed'
-                break
-              }
-            }
-            if (!allFeeds[i].followed) {
-              allFeeds[i].follow = 'follow'
-            }
-          }
-          var data = {
-            'feeds': allFeeds
-          }
-          res.render('feed', data)
-        }
-      })
-  }
+  console.log("kasdaskd")
+  Feed.find({})
+    .sort({insertTime: -1})
+    .exec(function (err, allFeeds) {
+      if (err) {
+        res.error(err)
+      } else {
+        res.json(allFeeds)
+      }
+    })
 }

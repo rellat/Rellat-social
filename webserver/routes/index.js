@@ -35,7 +35,7 @@ router.get('/api/v1/followerList', followManager.getFollowerList)
 router.get('/api/v1/followingList', followManager.getFollowingList)
 
 var feedManager = require('./feedManager')
-router.post('/api/v1/feed/AllFeeds', feedManager.getAllFeeds)
+router.get('/api/v1/feed/AllFeeds', feedManager.getAllFeeds)
 router.post('/api/v1/feed/postFeed', feedManager.postFeed)
 
 router.get('/api/v1/usersAndFollowings', userManager.getAllUserList, followManager.getFollowerList)

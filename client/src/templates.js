@@ -109,48 +109,23 @@ templates['snsHome'] =
 
 templates['feed'] =
   '{{#feeds}}' +
-  '    <article class="card-60 social">' +
-  '        <div class="flex-content">' +
-  '            <header>' +
-  '                <p class="user">' +
-  '                    {{#followed}}' +
-  '                        <a class="button followed" href="#" title="followed" id= {{userEmail}}>' +
-  '                            followed' +
-  '                        </a>' +
-  '                    {{/followed}}' +
-  '                    {{#follow}}' +
-  '                    <a class="button follow" href="#" title="Follow" id= {{userEmail}}>' +
-  '                        Follow' +
-  '                    </a>' +
-  '                    {{/follow}}' +
-  '                    <img class="avatar-32" alt="Avatar" src=./img/user.jpg>' +
-  '                    <strong>' +
-  '                        <a title="Full Name" href="#">' +
-  '                            {{user}}' +
-  '                        </a>' +
-  '                    </strong>' +
-  '                    <!--여기에 date 있었음 -->' +
-  '                </p>' +
-  '            </header>' +
-  '            <h2>' +
-  '                {{contentTitle}}' +
-  '            </h2>' +
-  '            <p>' +
-  '                {{contentBody}}' +
-  '            </p>' +
-  '            <footer>' +
-  '                <p>' +
-  '                    <a class="bt-love" title="Love" href="#">' +
-  '                        Love' +
-  '                    </a>' +
-  '                    <a class="bt-comment" title="Comment" href="#">' +
-  '                        Comment' +
-  '                    </a>' +
-  '                </p>' +
-  '            </footer>' +
+  '<div class="feed">' +
+  '    <img class="feed-user-avatar" src="{{userPicture}}" />' +
+  '    <div class = feed-content>' +
+  '            <div class="feed-item-header">' +
+  '                <div class="feed-user-name">{{userEmail}}</div>' +
+  '                <span class= "feed-nick">{{user}}</span>' +
+  '                <div class="feed-time" id ="feed-time-{{_id}}"></div>' +
+  '            </div>' +
+  '        <p class="feed-body">{{contentBody}}</p>' +
+  '        <div class="feed-actions">' +
+  '            <i class="fa fa-ellipsis-h"></i>' +
+  '            <i class="fa fa-heart"></i>' +
+  '            <i class="fa fa-retweet"></i>' +
+  '            <i class="fa fa-reply"></i>' +
   '        </div>' +
-  '        <!-- end .flex-content-->' +
-  '    </article>' +
+  '    </div>' +
+  '</div>' +
   '{{/feeds}}'
 
 templates['follow'] = '{{#followed}}' +

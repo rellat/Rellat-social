@@ -3,8 +3,7 @@ var mongoose = require('mongoose')
 module.exports = mongoose.model('Feed', {
   user: String,
   userEmail: String,
-  userImage: String,
-  contentTitle: String,
+  userPicture: String,
   contentBody: String,
-  date: {type: Date, default: Date.now}
+  insertTime: String
 })

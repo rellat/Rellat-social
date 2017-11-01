@@ -39,6 +39,8 @@ FeedManager.prototype.postFeed = function (contentBody, callback) {
 FeedManager.prototype.getAllFeed = function (callback) {
   var self = this
   var token = profileManager.getToken()
+  var profile = profileManager.getProfile()
+  console.log(token)
   // 토큰이 없다면 login 페이지로 넘어가도록 하고 아니라면 token에서 유저의 id와 email, image 경로 이름 등을 디코드 해서 같이 보낸다
   if (!token) {
     return
@@ -50,7 +52,8 @@ FeedManager.prototype.getAllFeed = function (callback) {
     {
       'cache-control': 'no-cache',
       'content-type': 'application/json',
-      'x-access-token': profileManager.token
+      'x-access-token': token,
+      'x-key': profile.email
     },
     json: true
   }
