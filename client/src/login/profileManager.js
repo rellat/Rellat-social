@@ -77,6 +77,7 @@ ProfileManager.prototype.submitLogin = function (email, password, callback) {
     if (!error && body.status === 'true') {
       self.setToken(body.token)
       self.setProfile(body.profile)
+      window.location.href = window.location.protocol + '//' + window.location.host + '/feed'
     } else {
       error = error || (body ? body.message || 'someting went wrong' : 'someting went wrong')
       callback(error, body)

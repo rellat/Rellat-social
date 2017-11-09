@@ -40,6 +40,15 @@ router.post('/api/v1/feed/postFeed', feedManager.postFeed)
 
 router.get('/api/v1/usersAndFollowings', userManager.getAllUserList, followManager.getFollowerList)
 
+var apiUtilManager = require('./apiUtilManager')
+router.post('/api/v1/exFeed',apiUtilManager.getFeedEx)
+
+var replyManager = require('./replyManager')
+router.post('/api/v1/addReply',replyManager.addReply)
+router.get('/api/v1/replies/:id',replyManager.getRepliesInFeed)
+
+var feedActionManager = require('./feedActionManager')
+router.post('/api/v1/pressHeart', feedActionManager.pressHeart)
 /*
  * Routes for Chat room
  */

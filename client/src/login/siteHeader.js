@@ -2,6 +2,7 @@ var ProfileManager = require('./profileManager')
 var util = require('../util')
 var template = require('../templates')
 var mustache = require('mustache')
+var feedManager = require('./../rellatSNS/feedManager')
 
 function SiteHeader (options) {
   var self = this
@@ -17,11 +18,13 @@ function SiteHeader (options) {
     var self = document.getElementsByClassName('dropdown')[0]
     util.toggleClass(self, 'open')
   })
+
   document.addEventListener('click', function (e) {
     var self = document.getElementsByClassName('dropdown')[0]
     if (util.hasClass(self, 'open')) {
       util.toggleClass(self, 'open')
     }
+
   })
 
   document.getElementsByClassName('nav-slider')[0].addEventListener('click', function (e) {
@@ -37,6 +40,8 @@ function SiteHeader (options) {
       util.toggleClass(self, 'open')
     }
     e.target.style.display = 'none'
+
+    feedManager.closeExtendFeed()
   })
 
   /**

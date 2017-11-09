@@ -24,6 +24,7 @@
     "request": "^2.81.0",
     "serve-favicon": "^2.4.4",
     "socket.io": "^2.0.3",
-    "socketio-auth": "^0.1.0"
+    "socketio-auth": "^0.1.0",
+    "underscore": "^1.8.3"
   }
 }

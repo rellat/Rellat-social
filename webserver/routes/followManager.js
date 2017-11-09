@@ -2,69 +2,72 @@ var User = require('./../models/user')
 var jwt = require('jwt-simple')
 
 module.exports.follow = function (req, res) {
-  var token = req.headers['x-access-token']
-  var data = jwt.decode(token, require('../config/secret.js')())
   var targetId = req.body.targetId
+  var email = req.body.profile.email
   // 일단 targer followers 목록에 나를 저장한다
-  User.find({email: targetId}).exec(function (err, user) {
-
+  User.findOne({email: targetId}).exec(function (err, user) {
     if (err) {
       res.error(err)
     } else {
-      user[0].followers.push({userEmail: data.email})
-      user[0].save()
+      user.followers.push({userEmail: email})
+      user.save()
     }
   })
 
-  User.find({email: data.email}).exec(function (err, user) {
+  User.findOne({email: email}).exec(function (err, user) {
 
     if (err) {
       res.error(err)
     } else {
-      user[0].following.push({userEmail: targetId})
-      user[0].save().then(function () {
-        res.json(user[0].following)
+      user.following.push({userEmail: targetId})
+      user.save().then(function () {
+        // for test
+        console.log(user)
+        res.json(user.following)
       })
     }
   })
 
 }
+// 으어아 나중에 여기좀 어떻게 해야겠다
 module.exports.unfollow = function (req, res) {
-  var token = req.headers['x-access-token']
-  var data = jwt.decode(token, require('../config/secret.js')())
   var targetId = req.body.targetId
+  var email = req.body.profile.email
   // 일단 targer followers 목록에 나를 저장한다
-  User.find({email: targetId}).exec(function (err, user) {
+  User.findOne({email: targetId}).exec(function (err, user) {
 
     if (err) {
       res.error(err)
     } else {
-      for (var i = 0, len = user[0].followers.length; i < len; i++) {
-        if (user[0].followers[i].userEmail === data.email) {
-          user[0].followers.splice(i, 1)
-          user[0].save()
+      for (var i = 0, len = user.followers.length; i < len; i++) {
+        console.log(user.followers[i])
+        if (user.followers[i].userEmail === email) {
+          user.followers.splice(i, 1)
           break
         }
       }
     }
-  })
+    user.save().then(function () {
+      User.findOne({email: email}).exec(function (err, user) {
+        if (err) {
+          res.error(err)
+        } else {
+          for (var i = 0, len = user.following.length; i < len; i++) {
 
-  User.find({email: data.email}).exec(function (err, user) {
-
-    if (err) {
-      res.error(err)
-    } else {
-      for (var i = 0, len = user[0].following.length; i < len; i++) {
-        if (user[0].following[i].userEmail === targetId) {
-          user[0].following.splice(i, 1)
-          user[0].save().then(function () {
-            res.json(user[0].following)
-          })
-          break
+            if (user.following[i].userEmail === targetId) {
+              user.following.splice(i, 1)
+              user.save().then(function () {
+                res.json(user.following)
+              })
+              break
+            }
+          }
         }
-      }
-    }
+      })
+    })
   })
+
+
 }
 
 module.exports.getFollowerList = function (req, res) {

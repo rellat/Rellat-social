@@ -13,8 +13,6 @@ module.exports.postFeed = function (req, res) {
     insertTime: String(new Date())
   })
 
-  console.log(feed)
-
   feed.save().then(function () {
     Feed.find({})
       .sort({insertTime: -1})
@@ -65,7 +63,6 @@ module.exports.getFeeds = function (req, res) {
 }
 
 module.exports.getAllFeeds = function (req, res) {
-  console.log("kasdaskd")
   Feed.find({})
     .sort({insertTime: -1})
     .exec(function (err, allFeeds) {

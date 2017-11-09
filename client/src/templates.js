@@ -107,18 +107,25 @@ templates['snsHome'] =
   '</div>' +
   '</div>'
 
-templates['feed'] =
+templates['feeds'] =
   '{{#feeds}}' +
   '<div class="feed">' +
-  '    <img class="feed-user-avatar" src="{{userPicture}}" />' +
-  '    <div class = feed-content>' +
-  '            <div class="feed-item-header">' +
-  '                <div class="feed-user-name">{{userEmail}}</div>' +
-  '                <span class= "feed-nick">{{user}}</span>' +
-  '                <div class="feed-time" id ="feed-time-{{_id}}"></div>' +
+  '    <img class="user-avatar" src="{{userPicture}}" />' +
+  '    <div class = content>' +
+  '            <div class="item-header">' +
+  '                <div class="user-data-group">' +
+  '                     <div class="user-name">{{userEmail}}</div>' +
+  '                     <span class="nick">{{user}}</span>' +
+  '                     <div class="feed-time" id ="feed-time-{{_id}}">Just now</div>' +
+  '                </div>' +
   '            </div>' +
-  '        <p class="feed-body">{{contentBody}}</p>' +
-  '        <div class="feed-actions">' +
+  '            <div class="textContainer" id ="{{_id}}">' +
+  '                <p>{{contentBody}}</p>' +
+  '            </div>' +
+  '            <div class="mediaContainer">' +
+  '                <!--이미지 또는 동양상을 여기 삽입할 것이다-->' +
+  '            </div>' +
+  '        <div class="actions">' +
   '            <i class="fa fa-ellipsis-h"></i>' +
   '            <i class="fa fa-heart"></i>' +
   '            <i class="fa fa-retweet"></i>' +
@@ -128,16 +135,64 @@ templates['feed'] =
   '</div>' +
   '{{/feeds}}'
 
-templates['follow'] = '{{#followed}}' +
-  ' <a class="button followed" href="#" title="followed" id= {{userEmail}}>' +
-  '   followed' +
-  '</a>' +
-  '{{/followed}}' +
-  '{{#follow}}' +
-  ' <a class="button follow" href="#" title="Follow" id= {{userEmail}}>' +
-  '   Follow' +
-  ' </a>' +
-  '{{/follow}}'
+templates['feed-ex'] =
+  '<div class="feed">' +
+  '    <img class="user-avatar roundImg" src="{{userPicture}}" />' +
+  '    <div class = content>' +
+  '            <div class="item-header">' +
+  '                <div class="user-data-group">' +
+  '                     <div class="user-name">{{userEmail}}</div>' +
+  '                     <span class="nick">{{user}}</span>' +
+  '                     <div class="feed-time" id ="feed-time-{{_id}}"></div>' +
+  '                </div>' +
+  '                <button class="followButton"></button>'+
+  '            </div>' +
+  '            <div class="textContainer">' +
+  '                <p>{{contentBody}}</p>' +
+  '            </div>' +
+  '            <div class="mediaContainer">' +
+  '                <!--이미지 또는 동양상을 여기 삽입할 것이다-->' +
+  '            </div>' +
+  '        <div class="actions">' +
+  '            <i class="fa fa-ellipsis-h"></i>' +
+  '            <i class="fa fa-heart"></i>' +
+  '            <i class="fa fa-retweet"></i>' +
+  '            <i class="fa fa-reply"></i>' +
+  '        </div>' +
+  '    </div>' +
+  '</div>' +
+  '<div class="sns-reply-input">' +
+  '        <div class="user-avatarContainer">' +
+  '            <img class="user-avatar roundImg" src="{{userPicture}}" width="32px">' +
+  '        </div>' +
+  '        <div class="textarea-box">' +
+  '            <textarea id = "{{_id}}" class="sns-reply-textarea" placeholder="Type your message" rows="1"></textarea>' +
+  '        </div>' +
+  '    </div>' +
+  '<div class="sns-reply-container">' +
+  '</div>'
+
+templates['reply'] =
+  '<ol class="sns-reply-list">' +
+  '{{#replies}}' +
+  '    <!--나중에 id를 reply-randomString으로 js에서 지정해 줄 것이다-->' +
+  '    <div class="sns-reply">' +
+  '        <div class="sns-reply-img">' +
+  '            <img class="roundImg" src="{{writerImgSrc}}" width="32px">' +
+  '        </div>' +
+  '        <div class="sns-reply-text-container">' +
+  '            <a href="javascript:void(0)"><span>{{writerId}}</span></a>' +
+  '            <span>{{content}}</span>' +
+  '        </div>' +
+  '        <div style="margin-left: 40px">' +
+  '            <a class="sns-reply-remove-btn" href="javascript:void(0)">Remove</a>' +
+  '            <a class="sns-reply-subreply-btn" href="javascript:void(0)">Reply</a>' +
+  '            <span id="sns-reply-time-{{_id}}"></span>' +
+  '        </div>' +
+  '    </div>' +
+  '{{/replies}}' +
+  '</ol>'
+
 
 // 이건 나중에 변경
 templates['users'] =
