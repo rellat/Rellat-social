@@ -17,13 +17,13 @@
     "cors": "^2.8.4",
     "express": "^4.15.4",
     "jwt-simple": "^0.5.1",
-    "mongoose": "^4.11.10",
     "morgan": "^1.8.2",
     "mustache": "^2.3.0",
     "mustache-express": "^1.2.5",
     "request": "^2.81.0",
     "serve-favicon": "^2.4.4",
-    "socket.io": "^2.0.3",
+    "socket.io": ">=2.4.0",
+    "mongoose": ">=5.7.5",
     "socketio-auth": "^0.1.0",
     "underscore": "^1.8.3"
   }
